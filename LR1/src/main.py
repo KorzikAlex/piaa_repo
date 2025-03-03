@@ -1,5 +1,5 @@
 """
-This is the main file of the project.
+Главный файл программы. Содержит функции для проверки времени выполнения алгоритма.
 
 Вар. 2и. Итеративный бэктрекинг. Исследование времени выполнения от
 размера квадрата.
@@ -7,30 +7,29 @@ This is the main file of the project.
 import timeit
 
 from modules.board import Board
-
 from modules.backtracking import backtracking_algorithm
 
 def time_check() -> None:
     """
-    This function checks the execution time of the backtracking algorithm for different board sizes.
+    Эта функция проверяет время выполнения алгоритма поиска с возвратом.
     :return:
     """
-    n_sizes = [2, 3, 4, 7, 9]
+    n_sizes: list[int] = [2, 3, 4, 7, 9]
     for n in n_sizes:
-        board = Board(n)
-        exec_time = timeit.timeit(lambda: backtracking_algorithm(board), number=1)
-        print(f"Execution time for board size {n}: {exec_time:.6f} seconds")
+        exec_time: float = timeit.timeit(lambda: backtracking_algorithm(Board(n)), number=1)
+        print(f"Время выполнения для доски {n}: {exec_time:.6f} секунд.")
 
 
 def main() -> None:
     """
-    Main function of the project.
+    Главная функция.
     :return:
     """
     n: int = int(input())
-    board: Board = Board(n)
-    result = backtracking_algorithm(board)
-    print(result)
+    result: list[list[int]] = backtracking_algorithm(Board(n))
+    print(len(result))
+    for square in result:
+        print(*square)
 
 
 if __name__ == "__main__":

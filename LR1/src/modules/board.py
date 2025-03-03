@@ -1,28 +1,24 @@
 """
-This module contains the class Board.
+Этот модуль содержит класс Board, который представляет доску n*n размером.
 """
-from modules.square import Square
-
-
 class Board:
     """
-    This class represents the board.
+    Этот класс представляет доску n*n размером.
     """
-
     def __init__(self, size: int) -> None:
         """
-        This function initializes the board.
+        Эта функция инициализирует доску.
         :param size:
         """
         self.__size: int = size
         self.__board: list[list[int]] = [[0 for _ in range(size)] for _ in range(size)]
-        self.__square_list: list[list[int, int, int]] = []
+        self.__square_list: list[list[int]] = []
         self.__count_square: int = 0
 
     @property
     def size(self) -> int:
         """
-        This function returns the size of the board.
+        Эта функция возвращает размер доски.
         :return:
         """
         return self.__size
@@ -30,15 +26,15 @@ class Board:
     @property
     def board(self) -> list[list[int]]:
         """
-        This function returns the board.
+        Эта функция возвращает доску.
         :return:
         """
         return self.__board
 
     @property
-    def square_list(self) -> list[list[int, int, int]]:
+    def square_list(self) -> list[list[int]]:
         """
-        This function returns the list of squares.
+        Эта функция возвращает список квадратов.
         :return:
         """
         return self.__square_list
@@ -46,14 +42,14 @@ class Board:
     @property
     def count_square(self) -> int:
         """
-        This function returns the number of squares.
+        Эта функция возвращает количество квадратов.
         :return:
         """
         return self.__count_square
 
     def is_fill(self) -> bool:
         """
-        This function checks if the board is full.
+        Эта функция проверяет, заполнена ли доска.
         :return:
         """
         for row in self.__board:
@@ -63,7 +59,7 @@ class Board:
 
     def get_empty_cell(self) -> tuple[int, int]:
         """
-        This function returns the coordinates of the first empty cell.
+        Эта функция возвращает пустую ячейку.
         :return:
         """
         for row in range(len(self.__board)):
@@ -74,7 +70,7 @@ class Board:
 
     def check_possible_square(self, x: int, y: int, side: int) -> bool:
         """
-        This function checks if a square can be placed.
+        Эта функция проверяет, можно ли добавить квадрат на доску.
         :param x:
         :param y:
         :param side:
@@ -90,22 +86,21 @@ class Board:
 
     def add_square(self, x: int, y: int, side: int) -> None:
         """
-        This function adds a square to the board.
+        Эта функция добавляет квадрат на доску.
         :param x:
         :param y:
         :param side:
         :return:
         """
-        square: Square = Square(side, x, y)
         for i in range(x, x + side):
             for j in range(y, y + side):
                 self.__board[i][j] = self.__count_square + 1
-        self.__square_list.append(square)
+        self.__square_list.append([x, y, side])
         self.__count_square += 1
 
     def place_squares_for_even_size(self) -> None:
         """
-        This function places squares on the board for even size.
+        Эта функция размещает квадраты на доске для четного размера.
         :return:
         """
         self.add_square(0, 0, self.__size // 2)
@@ -114,4 +109,10 @@ class Board:
         self.add_square(self.__size // 2, self.__size // 2, self.__size // 2)
 
     def place_squares_for_prime_size(self) -> None:
-        pass
+        """
+        Эта функция размещает квадраты на доске для простого размера.
+        :return:
+        """
+        self.add_square(0, 0, self.__size // 2 + 1)
+        self.add_square(0, self.__size // 2 + 1, self.__size // 2)
+        self.add_square(self.__size // 2 + 1, 0, self.__size // 2)
