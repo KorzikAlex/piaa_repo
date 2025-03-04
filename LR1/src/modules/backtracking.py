@@ -40,7 +40,7 @@ def scale_board(board: Board, mult: int) -> Board:
     """
     new_board: Board = Board(board.size * mult)
     for square in board.square_list:
-        new_board.add_square(square[0], square[1], square[2])
+        new_board.add_square(square[0] * mult, square[1] * mult, square[2] * mult)
     return new_board
 
 def backtracking(board: Board) -> Board:

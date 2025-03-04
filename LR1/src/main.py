@@ -14,10 +14,10 @@ def time_check() -> None:
     Эта функция проверяет время выполнения алгоритма поиска с возвратом.
     :return:
     """
-    n_sizes: list[int] = [2, 3, 4, 7, 9]
+    n_sizes: list[int] = [2, 3, 4, 7, 9, 15, 17, 19]
     for n in n_sizes:
         exec_time: float = timeit.timeit(lambda: backtracking_algorithm(Board(n)), number=1)
-        print(f"Время выполнения для доски {n}: {exec_time:.6f} секунд.")
+        print(f"Время выполнения для доски размером {n}*{n}: {exec_time:.6f} секунд.")
 
 
 def main() -> None:
@@ -27,6 +27,7 @@ def main() -> None:
     """
     n: int = int(input())
     result: list[list[int]] = backtracking_algorithm(Board(n))
+    result: list[list[int]] = [[comp[0] + 1, comp[1] + 1, comp[2]] for comp in result]
     print(len(result))
     for square in result:
         print(*square)
