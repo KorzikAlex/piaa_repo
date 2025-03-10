@@ -1,10 +1,13 @@
 """
 Этот модуль содержит класс Board, который представляет доску n*n размером.
 """
+
+
 class Board:
     """
     Этот класс представляет доску n*n размером.
     """
+
     def __init__(self, size: int) -> None:
         """
         Эта функция инициализирует доску.
@@ -76,7 +79,7 @@ class Board:
         :param side:
         :return:
         """
-        if x + side > self.__size or y + side > self.__size or side <= 0 or x < 0 or y < 0:
+        if (x + side > self.__size) or (y + side > self.__size) or side <= 0 or x < 0 or y < 0:
             return False
         for i in range(x, x + side):
             for j in range(y, y + side):
