@@ -1,7 +1,6 @@
 """
 Этот модуль содержит функции для алгоритма поиска с возвратом.
 """
-import queue
 from copy import deepcopy
 
 from modules.board import Board
@@ -52,21 +51,20 @@ def backtracking_fill_board(board: Board) -> Board:
     :param board:
     :return:
     """
-    iter_queue: queue.Queue = queue.Queue()
-    iter_queue.put(board)
-
-    while not iter_queue.queue[0].is_fill():
-        current_board: Board = deepcopy(iter_queue.queue[0])
+    iter_queue: list[Board] = [board]
+    while iter_queue:
+        current_board: Board = iter_queue.pop(0)
+        if current_board.is_fill():
+            return current_board
         empty_x, empty_y = current_board.get_empty_cell()
-        for i in range(board.size, 0, -1):
+        for i in range(current_board.size, 0, -1):
             if current_board.check_possible_square(empty_x, empty_y, i):
                 new_board: Board = deepcopy(current_board)
                 new_board.add_square(empty_x, empty_y, i)
-                iter_queue.put(new_board)
                 if new_board.is_fill():
                     return new_board
-        iter_queue.get()
-    return iter_queue.queue[0]
+                iter_queue.append(new_board)
+    return board
 
 def backtracking_algorithm(board: Board) -> list[list[int]]:
     """

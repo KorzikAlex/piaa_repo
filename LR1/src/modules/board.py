@@ -50,11 +50,24 @@ class Board:
         """
         return self.__count_square
 
+    def __deepcopy__(self, memodict: dict = None) -> 'Board':
+        """
+        Эта функция создает копию объекта. (глубокое копирование)
+        :param memodict:
+        :return:
+        """
+        new_board: Board = Board(self.__size)
+        new_board.__board: list[list[int]] = [row[:] for row in self.__board]
+        new_board.__square_list: list[list[int]] = [square[:] for square in self.__square_list]
+        new_board.__count_square: int = self.__count_square
+        return new_board
+
     def is_fill(self) -> bool:
         """
         Эта функция проверяет, заполнена ли доска.
         :return:
         """
+        row: list[int]
         for row in self.__board:
             if 0 in row:
                 return False
