@@ -41,7 +41,7 @@ def scale_board(board: Board, mult: int) -> Board:
     """
     new_board: Board = Board(board.size * mult)
     for square in board.square_list:
-        new_board.add_square(square[0] * mult, square[1] * mult, square[2] * mult, new_board.count_square)
+        new_board.add_square(square[0] * mult, square[1] * mult, square[2] * mult)
     return new_board
 
 
@@ -60,7 +60,7 @@ def backtracking_fill_board(board: Board) -> Board:
         for i in range(current_board.size, 0, -1):
             if current_board.check_possible_square(empty_x, empty_y, i):
                 new_board: Board = deepcopy(current_board)
-                new_board.add_square(empty_x, empty_y, i, new_board.count_square)
+                new_board.add_square(empty_x, empty_y, i)
                 if new_board.is_fill():
                     return new_board
                 iter_queue.append(new_board)

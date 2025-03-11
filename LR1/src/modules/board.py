@@ -100,18 +100,17 @@ class Board:
                     return False
         return True
 
-    def add_square(self, x: int, y: int, side: int, color: int = 0) -> None:
+    def add_square(self, x: int, y: int, side: int) -> None:
         """
         Эта функция добавляет квадрат на доску.
         :param x:
         :param y:
         :param side:
-        :param color:
         :return:
         """
         for i in range(x, x + side):
             for j in range(y, y + side):
-                self.__board[i][j] = color + 1
+                self.__board[i][j] = self.__count_square + 1
         self.__square_list.append([x, y, side])
         self.__count_square += 1
 
@@ -120,19 +119,19 @@ class Board:
         Эта функция размещает квадраты на доске для четного размера.
         :return:
         """
-        self.add_square(0, 0, self.__size // 2, self.count_square)
-        self.add_square(self.__size // 2, 0, self.__size // 2, self.count_square)
-        self.add_square(0, self.__size // 2, self.__size // 2, self.count_square)
-        self.add_square(self.__size // 2, self.__size // 2, self.__size // 2, self.count_square)
+        self.add_square(0, 0, self.__size // 2)
+        self.add_square(self.__size // 2, 0, self.__size // 2)
+        self.add_square(0, self.__size // 2, self.__size // 2)
+        self.add_square(self.__size // 2, self.__size // 2, self.__size // 2)
 
     def place_squares_for_prime_size(self) -> None:
         """
         Эта функция размещает квадраты на доске для простого размера.
         :return:
         """
-        self.add_square(0, 0, self.__size // 2 + 1, self.count_square)
-        self.add_square(0, self.__size // 2 + 1, self.__size // 2, self.count_square)
-        self.add_square(self.__size // 2 + 1, 0, self.__size // 2, self.count_square)
+        self.add_square(0, 0, self.__size // 2 + 1,)
+        self.add_square(0, self.__size // 2 + 1, self.__size // 2)
+        self.add_square(self.__size // 2 + 1, 0, self.__size // 2)
 
     def render_board(self) -> None:
         """
@@ -141,4 +140,4 @@ class Board:
         """
         row: list[int]
         for row in self.__board:
-            print(*row)
+            print(*row, sep="\t")
