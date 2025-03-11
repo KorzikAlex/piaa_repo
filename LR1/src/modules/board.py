@@ -132,3 +132,12 @@ class Board:
         self.add_square(0, 0, self.__size // 2 + 1)
         self.add_square(0, self.__size // 2 + 1, self.__size // 2)
         self.add_square(self.__size // 2 + 1, 0, self.__size // 2)
+
+    def render_board(self) -> None:
+        """
+        Эта функция отображает доску.
+        :return:
+        """
+        row: list[int]
+        for row in self.__board:
+            print(*row)

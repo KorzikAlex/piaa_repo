@@ -74,10 +74,11 @@ def backtracking_algorithm(board: Board) -> list[list[int]]:
     """
     if board.size % 2 == 0:
         board.place_squares_for_even_size()
+        board.render_board()
         return board.square_list
-
     if is_prime(board.size):
         board.place_squares_for_prime_size()
+        board.render_board()
         return backtracking_fill_board(board).square_list
     small_div, big_div = get_divisors(board.size)
     small_board: Board = Board(small_div)
@@ -85,4 +86,5 @@ def backtracking_algorithm(board: Board) -> list[list[int]]:
         small_board.place_squares_for_prime_size()
     small_board: Board = backtracking_fill_board(small_board)
     board = scale_board(small_board, big_div)
+    board.render_board()
     return board.square_list

@@ -19,8 +19,8 @@ def time_check() -> None:
     for n in n_sizes:
         exec_time: float = timeit.timeit(lambda: backtracking_algorithm(Board(n)), number=1) # время выполнения
         result_time += exec_time
-        print(f"Время выполнения для доски размером {n}*{n}: {exec_time:.6f} секунд.") # вывод времени
-    print(f"Общее время выполнения: {result_time:.6f} секунд.") # вывод общего времени
+        print(f"Время выполнения для доски размером {n}*{n}:\t{exec_time:.6f} сек.".replace(".", ",", 1)) # вывод времени
+    print(f"Общее время выполнения:\t{result_time:.6f} сек.") # вывод общего времени
 
 
 def main() -> None:
@@ -32,17 +32,18 @@ def main() -> None:
     while True:
         try:
             n: int = int(input())
-            if n < 1:
-                print("Ошибка: размер доски должен быть натуральным целым числом.")
+            if not 2 <= n <= 20:
+                print("Ошибка: размер доски должен быть натуральным целым числом в диапазоне от [2, 20].")
                 continue
             break
         except ValueError:
-            print("Ошибка: введено не целое натуральное число.")
+            print("Ошибка: введено не целое натуральное число в диапазоне от [2, 20].")
 
     # алгоритм бэктрекинга вернёт список квадратов (x, y, w)
     result: list[list[int]] = backtracking_algorithm(Board(n))
     # преобразуем координаты (они от 1 до N)
     result: list[list[int]] = [[comp[0] + 1, comp[1] + 1, comp[2]] for comp in result]
+    print()
     # выведем кол-во квадратов
     print(len(result))
     # вывод квадратов
