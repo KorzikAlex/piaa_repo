@@ -41,7 +41,7 @@ def scale_board(board: Board, mult: int) -> Board:
     """
     new_board: Board = Board(board.size * mult)
     for square in board.square_list:
-        new_board.add_square(square[0] * mult, square[1] * mult, square[2] * mult)
+        new_board.add_square(square[0] * mult, square[1] * mult, square[2] * mult, new_board.count_square)
     return new_board
 
 
@@ -60,7 +60,7 @@ def backtracking_fill_board(board: Board) -> Board:
         for i in range(current_board.size, 0, -1):
             if current_board.check_possible_square(empty_x, empty_y, i):
                 new_board: Board = deepcopy(current_board)
-                new_board.add_square(empty_x, empty_y, i)
+                new_board.add_square(empty_x, empty_y, i, new_board.count_square)
                 if new_board.is_fill():
                     return new_board
                 iter_queue.append(new_board)
@@ -78,8 +78,9 @@ def backtracking_algorithm(board: Board) -> list[list[int]]:
         return board.square_list
     if is_prime(board.size):
         board.place_squares_for_prime_size()
+        board = backtracking_fill_board(board)
         board.render_board()
-        return backtracking_fill_board(board).square_list
+        return board.square_list
     small_div, big_div = get_divisors(board.size)
     small_board: Board = Board(small_div)
     if is_prime(small_div):

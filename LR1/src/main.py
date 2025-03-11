@@ -15,11 +15,13 @@ def time_check() -> None:
     :return:
     """
     n_sizes: list[int] = list(range(2, 21)) # все размеры от 2 до 20
-    result_time: int = 0
+    result_time: int = 0 # суммарное время выполнения
     for n in n_sizes:
         exec_time: float = timeit.timeit(lambda: backtracking_algorithm(Board(n)), number=1) # время выполнения
         result_time += exec_time
-        print(f"Время выполнения для доски размером {n}*{n}:\t{exec_time:.6f} сек.".replace(".", ",", 1)) # вывод времени
+        # вывод времени
+        print(f"Время выполнения для доски размером {n}*{n}:\t{exec_time:.6f} сек.".replace(".", ",", 1))
+        print()
     print(f"Общее время выполнения:\t{result_time:.6f} сек.") # вывод общего времени
 
 
@@ -53,8 +55,8 @@ def main() -> None:
 
 if __name__ == "__main__":
     # главная функция
-    main()
+    # main()
 
     # проверка времени выполнения алгоритма в зависимости от размера квадратов
     # (раскомментировать при необходимости)
-    # time_check()
+    time_check()
