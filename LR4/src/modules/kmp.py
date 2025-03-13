@@ -52,7 +52,7 @@ def find_cyclic_shift(text: str, sub_text: str) -> int:
     :param sub_text:
     :return:
     """
-    if len(text) == 0 or len(sub_text) == 0:
+    if len(text) != len(sub_text):
         return -1
     j: int = 0
     pi: list[int] = prefix_func(sub_text)
@@ -62,6 +62,6 @@ def find_cyclic_shift(text: str, sub_text: str) -> int:
             j: int = pi[j - 1]
         if text[idx] == sub_text[j]:
             j += 1
-        if j == len(sub_text):
+        if j >= len(sub_text):
             return i - j + 1
     return -1
