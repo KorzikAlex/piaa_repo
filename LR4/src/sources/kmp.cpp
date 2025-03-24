@@ -73,7 +73,7 @@ std::vector<int> kmp(const std::string &text, const std::string &sub_text) {
     return res_indexes;
 }
 
-int find_cyclic_shift(const std::string &text, const std::string &sub_text) {
+int index_cyclic_shift(const std::string &text, const std::string &sub_text) {
     std::cout << "Поиск циклического сдвига между \"" << text << "\" и \"" << sub_text << "\"" << std::endl;
     if (text.size() != sub_text.size()) {
         std::cerr << "Ошибка: длины строк отличаются (" << text.size() << " vs " << sub_text.size() << ")" << std::endl;

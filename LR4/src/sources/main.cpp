@@ -40,5 +40,5 @@ int main() {
     std::string a, b; // Строки
     std::cin >> a >> b; // Вводим строки
 
-    std::cout << "Индекс сдвига строки: " << find_cyclic_shift(a, b) << std::endl; // Выводим результат
+    std::cout << "Индекс сдвига строки: " << index_cyclic_shift(a, b) << std::endl; // Выводим результат
 }

@@ -30,4 +30,4 @@ std::vector<int> kmp(const std::string &text, const std::string &sub_text);
  * @param sub_text Подстрока для поиска
  * @return Индекс сдвига
  */
-int find_cyclic_shift(const std::string &text, const std::string &sub_text);
+int index_cyclic_shift(const std::string &text, const std::string &sub_text);

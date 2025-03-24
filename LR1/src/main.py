@@ -6,23 +6,22 @@
 """
 import timeit
 
+
 from modules.board import Board
-from modules.backtracking import backtracking_algorithm
+from modules.backtracking import backtracking_algorithm, silent_backtracking
 
 def time_check() -> None:
     """
     Эта функция проверяет время выполнения алгоритма поиска с возвратом.
     :return:
     """
-    n_sizes: list[int] = list(range(2, 21)) # все размеры от 2 до 20
-    result_time: int = 0 # суммарное время выполнения
+    n_sizes: list[int] = list(range(2, 21))
+    result_time: float = 0.0
     for n in n_sizes:
-        exec_time: float = timeit.timeit(lambda: backtracking_algorithm(Board(n)), number=1) # время выполнения
+        exec_time: float = timeit.timeit(lambda: silent_backtracking(n), number=1)
         result_time += exec_time
-        # вывод времени
         print(f"Время выполнения для доски размером {n}*{n}:\t{exec_time:.6f} сек.".replace(".", ",", 1))
-        print()
-    print(f"Общее время выполнения:\t{result_time:.6f} сек.") # вывод общего времени
+    print(f"\nОбщее время выполнения: {result_time:.6f} сек.")
 
 
 def main() -> None:
@@ -34,7 +33,7 @@ def main() -> None:
     while True:
         try:
             n: int = int(input())
-            if not 2 <= n <= 20:
+            if not 2 <= n <= 60:
                 print("Ошибка: размер доски должен быть натуральным целым числом в диапазоне от [2, 20].")
                 continue
             break
