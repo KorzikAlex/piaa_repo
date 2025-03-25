@@ -17,6 +17,7 @@ def time_check() -> None:
     """
     n_sizes: list[int] = list(range(2, 21))
     result_time: float = 0.0
+    n: int
     for n in n_sizes:
         exec_time: float = timeit.timeit(lambda: silent_backtracking(n), number=1)
         result_time += exec_time
@@ -58,4 +59,4 @@ if __name__ == "__main__":
 
     # проверка времени выполнения алгоритма в зависимости от размера квадратов
     # (раскомментировать при необходимости)
-    time_check()
+    # time_check()
