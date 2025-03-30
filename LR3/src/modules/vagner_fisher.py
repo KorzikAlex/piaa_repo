@@ -4,9 +4,9 @@
 
 
 def _wagner_fisher_step(i: int, j: int, s1: str, s2: str, matrix: list[list[int]],
-                        rep_cost: int, ins_cost: int, del_cost: int) -> int:
+                        rep_cost: int, ins_cost: int, del_cost: int, ins2_cost: int) -> int:
     """
-    Функция для вычисления шага алгоритма Вагнера-Фишера.
+    Вычисляет шаг алгоритма Вагнера-Фишера для двух строк s1 и s2.
     :param i:
     :param j:
     :param s1:
@@ -15,6 +15,7 @@ def _wagner_fisher_step(i: int, j: int, s1: str, s2: str, matrix: list[list[int]
     :param rep_cost:
     :param ins_cost:
     :param del_cost:
+    :param ins2_cost:
     :return:
     """
     if i == 0 and j == 0:
@@ -22,83 +23,135 @@ def _wagner_fisher_step(i: int, j: int, s1: str, s2: str, matrix: list[list[int]
     if j == 0:
         return i * del_cost
     if i == 0:
-        return j * ins_cost
+        # При пустой строке s1 можно накапливать вставки.
+        if j == 1:
+            return matrix[0][0] + ins_cost
+        # Выбираем минимальный вариант: либо единичная вставка, либо двойная вставка.
+        return min(matrix[0][j - 1] + ins_cost, matrix[0][j - 2] + ins2_cost)
 
-    replace: int = matrix[i - 1][j - 1] + (rep_cost if s1[i - 1] != s2[j - 1] else 0)
-    insert: int = matrix[i][j - 1] + ins_cost
-    delete: int = matrix[i - 1][j] + del_cost
+    # Замена или совпадение
+    rep = matrix[i - 1][j - 1] + (0 if s1[i - 1] == s2[j - 1] else rep_cost)
+    ins = matrix[i][j - 1] + ins_cost
+    dele = matrix[i - 1][j] + del_cost
 
-    return min(insert, delete, replace)
+    candidates = [rep, ins, dele]
+    if j >= 2:
+        # Операция последовательной вставки двух символов
+        candidates.append(matrix[i][j - 2] + ins2_cost)
+    return min(candidates)
 
 
 def calculate_edit_distance(s1: str, s2: str,
-                            rep_cost: int = 1, ins_cost: int = 1, del_cost: int = 1) -> int:
+                            rep_cost: int = 1, ins_cost: int = 1,
+                            del_cost: int = 1, ins2_cost: int = 1) -> int:
     """
-    Функция для вычисления алгоритма Вагнера-Фишера.
+    Вычисляет расстояние редактирования между строками s1 и s2
+    с учётом операций: замены, вставки, удаления и
+    последовательной вставки двух одинаковых символов.
     :param s1:
     :param s2:
     :param rep_cost:
     :param ins_cost:
     :param del_cost:
+    :param ins2_cost:
     :return:
     """
     n, m = len(s1), len(s2)
     matrix: list[list[int]] = [[0] * (m + 1) for _ in range(n + 1)]
+
     for i in range(n + 1):
         for j in range(m + 1):
-            matrix[i][j]: int = _wagner_fisher_step(i, j, s1, s2, matrix, rep_cost, ins_cost, del_cost)
+            matrix[i][j] = _wagner_fisher_step(i, j, s1, s2, matrix,
+                                               rep_cost, ins_cost,
+                                               del_cost, ins2_cost)
     return matrix[n][m]
 
 
-def compute_edit_sequence(s1: str, s2: str, rep_cost: int, ins_cost: int, del_cost: int) -> str:
+def compute_edit_sequence(s1: str, s2: str,
+                          rep_cost: int, ins_cost: int,
+                          del_cost: int, ins2_cost: int) -> str:
     """
-    Функция для вычисления последовательности операций алгоритма Вагнера-Фишера.
+    Вычисляет последовательность операций для преобразования строки s1 в s2
+    с учётом дополнительных затрат при последовательной вставке двух символов.
+
+    Обозначения:
+        M – совпадение (match)
+        R – замена (replacement)
+        I – вставка одного символа
+        D – удаление символа
+        P – последовательная вставка двух одинаковых символов
     :param s1:
     :param s2:
     :param rep_cost:
     :param ins_cost:
     :param del_cost:
+    :param ins2_cost:
     :return:
     """
     n, m = len(s1), len(s2)
 
-    # Матрица для стоимости
-    cost = [[0] * (m + 1) for _ in range(n + 1)]
-    # Матрица для обратных указателей (операций)
-    back = [[''] * (m + 1) for _ in range(n + 1)]
+    # Матрица для стоимости и для операций
+    cost: list[list[int]] = [[0] * (m + 1) for _ in range(n + 1)]
+    back: list[list[str]] = [[''] * (m + 1) for _ in range(n + 1)]
 
-    # Инициализация первой строки и первого столбца
+    # Инициализация первого столбца (удаления)
     for i in range(1, n + 1):
         cost[i][0] = cost[i - 1][0] + del_cost
-        back[i][0] = 'D'  # Удаление (от верхней ячейки)
-    for j in range(1, m + 1):
-        cost[0][j] = cost[0][j - 1] + ins_cost
-        back[0][j] = 'I'  # Вставка (от левой ячейки)
+        back[i][0] = 'D'
+
+    # Инициализация первой строки (вставки)
+    if m >= 1:
+        cost[0][1] = cost[0][0] + ins_cost
+        back[0][1] = 'I'
+    for j in range(2, m + 1):
+        # Рассматриваем либо наращивание через единичную вставку, либо операцию двойной вставки
+        candidate_single = cost[0][j - 1] + ins_cost
+        candidate_double = cost[0][j - 2] + ins2_cost
+        if candidate_double < candidate_single:
+            cost[0][j] = candidate_double
+            back[0][j] = 'P'
+        else:
+            cost[0][j] = candidate_single
+            back[0][j] = 'I'
 
     # Заполнение матрицы динамического программирования
     for i in range(1, n + 1):
         for j in range(1, m + 1):
-            # Проверяем, совпадают ли символы
+            # Замена или совпадение
             if s1[i - 1] == s2[j - 1]:
-                replace_cost = cost[i - 1][j - 1]  # Матч (без затрат)
+                rep_val = cost[i - 1][j - 1]
+                op_rep = 'M'
             else:
-                replace_cost = cost[i - 1][j - 1] + rep_cost  # Замена
-            insert_cost = cost[i][j - 1] + ins_cost
-            delete_cost = cost[i - 1][j] + del_cost
+                rep_val = cost[i - 1][j - 1] + rep_cost
+                op_rep = 'R'
+            # Вставка одного символа
+            ins_val = cost[i][j - 1] + ins_cost
+            op_ins = 'I'
+            # Удаление символа
+            del_val = cost[i - 1][j] + del_cost
+            op_del = 'D'
 
-            # Определяем минимальную стоимость и сохраняем операцию
-            min_cost = replace_cost
-            op = 'M' if s1[i - 1] == s2[j - 1] else 'R'
-            if insert_cost < min_cost:
-                min_cost = insert_cost
-                op = 'I'
-            if delete_cost < min_cost:
-                min_cost = delete_cost
-                op = 'D'
-            cost[i][j] = min_cost
-            back[i][j] = op
+            best = rep_val
+            best_op = op_rep
 
-    # Обратное отслеживание (backtracking) для восстановления последовательности операций
+            if ins_val < best:
+                best = ins_val
+                best_op = op_ins
+            if del_val < best:
+                best = del_val
+                best_op = op_del
+
+            if j >= 2:
+                # Последовательная вставка двух одинаковых символов
+                double_ins_val = cost[i][j - 2] + ins2_cost
+                if double_ins_val < best:
+                    best = double_ins_val
+                    best_op = 'P'
+
+            cost[i][j] = best
+            back[i][j] = best_op
+
+    # Обратное отслеживание для восстановления последовательности операций
     i, j = n, m
     operations = []
     while i > 0 or j > 0:
@@ -111,6 +164,7 @@ def compute_edit_sequence(s1: str, s2: str, rep_cost: int, ins_cost: int, del_co
             j -= 1
         elif op == 'D':
             i -= 1
-
-    operations.reverse()  # Получаем правильный порядок операций
+        elif op == 'P':
+            j -= 2
+    operations.reverse()
     return ''.join(operations)
