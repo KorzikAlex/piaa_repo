@@ -30,11 +30,11 @@ def _wagner_fisher_step(i: int, j: int, s1: str, s2: str, matrix: list[list[int]
         return min(matrix[0][j - 1] + ins_cost, matrix[0][j - 2] + ins2_cost)
 
     # Замена или совпадение
-    rep = matrix[i - 1][j - 1] + (0 if s1[i - 1] == s2[j - 1] else rep_cost)
-    ins = matrix[i][j - 1] + ins_cost
-    dele = matrix[i - 1][j] + del_cost
+    rep: int = matrix[i - 1][j - 1] + (0 if s1[i - 1] == s2[j - 1] else rep_cost)
+    ins: int = matrix[i][j - 1] + ins_cost
+    dele: int = matrix[i - 1][j] + del_cost
 
-    candidates = [rep, ins, dele]
+    candidates: list[int] = [rep, ins, dele]
     if j >= 2:
         # Операция последовательной вставки двух символов
         candidates.append(matrix[i][j - 2] + ins2_cost)
@@ -68,8 +68,8 @@ def calculate_edit_distance(s1: str, s2: str,
 
 
 def compute_edit_sequence(s1: str, s2: str,
-                          rep_cost: int, ins_cost: int,
-                          del_cost: int, ins2_cost: int) -> str:
+                          rep_cost: int = 1, ins_cost: int = 1,
+                          del_cost: int = 1, ins2_cost: int = 1) -> str:
     """
     Вычисляет последовательность операций для преобразования строки s1 в s2
     с учётом дополнительных затрат при последовательной вставке двух символов.
@@ -96,66 +96,67 @@ def compute_edit_sequence(s1: str, s2: str,
 
     # Инициализация первого столбца (удаления)
     for i in range(1, n + 1):
-        cost[i][0] = cost[i - 1][0] + del_cost
-        back[i][0] = 'D'
+        cost[i][0]: int = cost[i - 1][0] + del_cost
+        back[i][0]: str = 'D'
 
     # Инициализация первой строки (вставки)
     if m >= 1:
-        cost[0][1] = cost[0][0] + ins_cost
-        back[0][1] = 'I'
+        cost[0][1]: int = cost[0][0] + ins_cost
+        back[0][1]: str = 'I'
+
     for j in range(2, m + 1):
         # Рассматриваем либо наращивание через единичную вставку, либо операцию двойной вставки
-        candidate_single = cost[0][j - 1] + ins_cost
-        candidate_double = cost[0][j - 2] + ins2_cost
+        candidate_single: int = cost[0][j - 1] + ins_cost
+        candidate_double: int = cost[0][j - 2] + ins2_cost
         if candidate_double < candidate_single:
-            cost[0][j] = candidate_double
-            back[0][j] = 'P'
+            cost[0][j]: int = candidate_double
+            back[0][j]: str = 'P'
         else:
-            cost[0][j] = candidate_single
-            back[0][j] = 'I'
+            cost[0][j]: int = candidate_single
+            back[0][j]: str = 'I'
 
     # Заполнение матрицы динамического программирования
     for i in range(1, n + 1):
         for j in range(1, m + 1):
             # Замена или совпадение
             if s1[i - 1] == s2[j - 1]:
-                rep_val = cost[i - 1][j - 1]
-                op_rep = 'M'
+                rep_val: int = cost[i - 1][j - 1]
+                op_rep: str = 'M'
             else:
-                rep_val = cost[i - 1][j - 1] + rep_cost
-                op_rep = 'R'
+                rep_val: int = cost[i - 1][j - 1] + rep_cost
+                op_rep: str = 'R'
             # Вставка одного символа
-            ins_val = cost[i][j - 1] + ins_cost
-            op_ins = 'I'
+            ins_val: int = cost[i][j - 1] + ins_cost
+            op_ins: str = 'I'
             # Удаление символа
-            del_val = cost[i - 1][j] + del_cost
-            op_del = 'D'
+            del_val: int = cost[i - 1][j] + del_cost
+            op_del: str = 'D'
 
-            best = rep_val
-            best_op = op_rep
+            best: int = rep_val
+            best_op: str = op_rep
 
             if ins_val < best:
-                best = ins_val
-                best_op = op_ins
+                best: int = ins_val
+                best_op: str = op_ins
             if del_val < best:
-                best = del_val
-                best_op = op_del
+                best: int = del_val
+                best_op: str = op_del
 
             if j >= 2:
                 # Последовательная вставка двух одинаковых символов
-                double_ins_val = cost[i][j - 2] + ins2_cost
+                double_ins_val: int = cost[i][j - 2] + ins2_cost
                 if double_ins_val < best:
-                    best = double_ins_val
-                    best_op = 'P'
+                    best: int = double_ins_val
+                    best_op: str = 'P'
 
-            cost[i][j] = best
-            back[i][j] = best_op
+            cost[i][j]: int = best
+            back[i][j]: str = best_op
 
     # Обратное отслеживание для восстановления последовательности операций
     i, j = n, m
-    operations = []
+    operations: list = []
     while i > 0 or j > 0:
-        op = back[i][j]
+        op: str = back[i][j]
         operations.append(op)
         if op in ('M', 'R'):
             i -= 1
