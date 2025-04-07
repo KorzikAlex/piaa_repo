@@ -16,7 +16,7 @@ def main() -> None:
     rep_cost, ins_cost, del_cost, ins2_cost = map(int, input().split())
     s1: str = input()
     s2: str = input()
-    print(calculate_edit_distance(s1, s2, rep_cost, ins_cost, del_cost, ins2_cost))
+    print("Результат:", calculate_edit_distance(s1, s2, rep_cost, ins_cost, del_cost, ins2_cost))
 
     print("Задание #2: Алгоритм Вагнера-Фишера. Порядок операции")
     rep_cost, ins_cost, del_cost, ins2_cost = map(int, input().split())
@@ -27,11 +27,8 @@ def main() -> None:
     print("Задание #3: Расстояние Левенштейна")
     s1: str = input()
     s2: str = input()
-    print(calculate_edit_distance(s1, s2))
+    print("Результат:", calculate_edit_distance(s1, s2))
 
 
 if __name__ == "__main__":
-    # TODO: Добавить промежуточные выводы
-    # TODO: Протестировать программу
-    # TODO: Написать отчёт
     main()
