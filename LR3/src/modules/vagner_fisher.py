@@ -58,7 +58,7 @@ def _wagner_fisher_step(i: int, j: int, s1: str, s2: str, matrix: list[list[int]
 
 def calculate_edit_distance(s1: str, s2: str,
                             rep_cost: int = 1, ins_cost: int = 1,
-                            del_cost: int = 1, ins2_cost: int = 2) -> int:
+                            del_cost: int = 1, ins2_cost: int = 1) -> int:
     """
     Вычисляет расстояние редактирования между строками s1 и s2
     с учётом операций: замены, вставки, удаления и
@@ -95,8 +95,8 @@ def compute_edit_sequence(s1: str, s2: str,
     с учётом дополнительных затрат при последовательной вставке двух символов.
 
     Обозначения:
-        M – совпадение (match)
-        R – замена (replacement)
+        M – совпадение
+        R – замена
         I – вставка одного символа
         D – удаление символа
         P – последовательная вставка двух одинаковых символов
@@ -189,8 +189,15 @@ def compute_edit_sequence(s1: str, s2: str,
 
             cost[i][j]: int = best
             back[i][j]: str = best_op
-            print(f"  Выбранная операция: '{best_op}' → cost[{i}][{j}] = {best}")
-
+            print(f"\tВыбранная операция: '{best_op}' → cost[{i}][{j}] = {best}")
+    print("\n" + "=" * 50)
+    print("Матрица стоимостей операций")
+    for row in cost:
+        print('\t'.join(map(str, row)))
+    print("\n" + "=" * 50)
+    print("Матрица оптимальных операций")
+    for row in back:
+        print('\t'.join(row))
     print("\n" + "=" * 50)
     print("Восстановление последовательности операций:")
     i, j = n, m
@@ -198,7 +205,7 @@ def compute_edit_sequence(s1: str, s2: str,
     while i > 0 or j > 0:
         op: str = back[i][j]
         operations.append(op)
-        print(f"  Позиция ({i}, {j}): операция '{op}'")
+        print(f"\tПозиция ({i}, {j}): операция '{op}'")
         if op in ('M', 'R'):
             i -= 1
             j -= 1
