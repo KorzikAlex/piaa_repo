@@ -9,10 +9,10 @@ class Vertex:
     Класс, представляющий вершину в автомате.
     """
 
-    def __init__(self, id_: int, alpha: int, parent: "Vertex" or None, pchar: str or None) -> None:
+    def __init__(self, id_: int, alpha: int, parent: "Vertex" or None = None, pchar: str or None = None) -> None:
         """
         Конструктор класса Vertex.
-        :param id: Идентификатор вершины.
+        :param id_: Идентификатор вершины.
         :param alpha: Количество символов в алфавите.
         :param parent: Родительская вершина.
         :param pchar: Символ, по которому произошел переход в эту вершину.

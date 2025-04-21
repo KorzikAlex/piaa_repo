@@ -49,6 +49,57 @@ def aho_corasick_search():
     for pos, p in occurrences:
         print(pos, p)
 
+def search_with_wildcard():
+    """
+    Поиск с учетом джокера.
+    :return: None
+    """
+    text: str = input().strip()
+    pattern: str = input().strip()
+    wildcard = input().strip()
+    len_text, len_pattern = len(text), len(pattern)
+
+    segments: list[tuple[str, int]] = []
+    curr: list[str] = []
+    start: int = 0
+    i: int
+    ch: str
+    for i, ch in enumerate(pattern):
+        if ch == wildcard:
+            if curr:
+                segments.append(("".join(curr), start))
+                curr: list[str] = []
+            start: int = i + 1
+        else:
+            if not curr:
+                start: int = i
+            curr.append(ch)
+    if curr:
+        segments.append(("".join(curr), start))
+
+    trie: Trie = Trie(5)
+    pid: int
+    seg: str
+    off: int
+    for pid, (seg, off) in enumerate(segments):
+        trie.add(seg, pid)
+
+    occ: list[tuple[int, int]] = trie.search(text)
+    needed: int = len(segments)
+    counts: list[int] = [0] * (len_text - len_pattern + 1 if len_text >= len_pattern else 0)
+
+    end_pos: int
+    pid: int
+    for end_pos, pid in occ:
+        seg, off = segments[pid]
+        l: int = len(seg)
+        p: int = end_pos - (off + l - 1)
+        if 0 <= p <= len_text - len_pattern:
+            counts[p] += 1
+
+    for i, c in enumerate(counts):
+        if c == needed:
+            print(i + 1)
 
 def main() -> None:
     """
@@ -59,7 +110,7 @@ def main() -> None:
     aho_corasick_search()
 
     print("Задание #2: Решение задачи точного поиска одного образца с джокером")
-
+    search_with_wildcard()
 
 if __name__ == '__main__':
     main()

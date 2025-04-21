@@ -32,7 +32,7 @@ class Trie:
         :param alpha: Размер алфавита бора.
         """
         self.__alpha: int = alpha
-        self.__vertices: list[Vertex] = [Vertex(0, alpha, None, None)]
+        self.__vertices: list[Vertex] = [Vertex(0, alpha)]
         self.__root: Vertex = self.vertices[0]
 
     @property
@@ -79,6 +79,7 @@ class Trie:
         """
         Добавляет строку в дерево.
         :param s: Строка для добавления.
+        :param pattern_num: Номер шаблона.
         :return: None
         """
         v: Vertex = self.root
@@ -92,19 +93,26 @@ class Trie:
         v.is_terminal = True
         v.pattern_numbers.append(pattern_num)
 
-    def find(self, s: str) -> bool:
+    def search(self, s: str) -> list[tuple[int, int]]:
         """
         Проверяет, есть ли строка в дереве.
         :param s: Строка для поиска.
-        :return: True, если строка найдена, иначе False.
+        :return: Список кортежей (позиция, номер шаблона), где позиция - это индекс в строке s,
         """
+        res: list[tuple[int, int]] = []
         v: Vertex = self.root
-        for char in s:
-            idx: int = _num(char)
-            if v.next[idx] is None:
-                return False
-            v: Vertex = v.next[idx]
-        return v.is_terminal
+
+        i: int
+        char: str
+        for i, char in enumerate(s):
+            v = self.go(v, char)
+            u = v
+            while u is not self.root:
+                if u.is_terminal:
+                    for pid in u.pattern_numbers:
+                        res.append((i, pid))
+                u = self.get_link(u)
+        return res
 
     def get_link(self, v: Vertex) -> Vertex:
         """
@@ -122,9 +130,9 @@ class Trie:
     def go(self, v: Vertex, c: str) -> Vertex:
         """
         Возвращает вершину, в которую ведет переход по символу c из вершины v.
-        :param v:
-        :param c:
-        :return:
+        :param v: Вершина, из которой нужно сделать переход.
+        :param c: Символ, по которому нужно сделать переход.
+        :return: Вершина, в которую ведет переход по символу c из вершины v.
         """
         idx = _num(c)
         if v.go[idx] is None:
