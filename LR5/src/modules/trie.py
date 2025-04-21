@@ -1,16 +1,23 @@
+# -*- coding: utf-8 -*-
 """
 Класс Trie для работы с префиксными деревьями.
 """
-from vertex import Vertex
+from modules.vertex import Vertex
 
 
-def num(c: str) -> int:
+def _num(c: str) -> int:
     """
     Функция для получения номера буквы в алфавите.
     :param c: Буква
     :return: Номер буквы
     """
-    alphabet: dict = {'A': 0, 'C': 1, 'G': 2, 'T': 3, 'N': 4}
+    alphabet: dict = {
+        'A': 0,
+        'C': 1,
+        'G': 2,
+        'T': 3,
+        'N': 4
+    }
     return alphabet[c]
 
 
@@ -24,9 +31,9 @@ class Trie:
         Конструктор класса Trie.
         :param alpha: Размер алфавита бора.
         """
-        self.alpha: int = alpha
-        self.vertices: list[Vertex] = [Vertex(0, alpha, None, None)]
-        self.root: Vertex = self.vertices[0]
+        self.__alpha: int = alpha
+        self.__vertices: list[Vertex] = [Vertex(0, alpha, None, None)]
+        self.__root: Vertex = self.vertices[0]
 
     @property
     def size(self) -> int:
@@ -37,39 +44,66 @@ class Trie:
         return len(self.vertices)
 
     @property
-    def last(self):
+    def last(self) -> Vertex:
         """
         Возвращает последнюю вершину в дереве.
         :return: Последняя вершина в дереве.
         """
         return self.vertices[-1]
 
-    def add(self, s: str) -> None:
+    @property
+    def alpha(self):
+        """
+        Возвращает размер алфавита.
+        :return: Размер алфавита.
+        """
+        return self.__alpha
+
+    @property
+    def vertices(self) -> list[Vertex]:
+        """
+        Возвращает список вершин в дереве.
+        :return: Список вершин в дереве.
+        """
+        return self.__vertices
+
+    @property
+    def root(self) -> Vertex:
+        """
+        Возвращает корень дерева.
+        :return: Корень дерева.
+        """
+        return self.__root
+
+    def add(self, s: str, pattern_num: int) -> None:
         """
         Добавляет строку в дерево.
         :param s: Строка для добавления.
         :return: None
         """
         v: Vertex = self.root
-        for i in range(len(s)):
-            idx = num(s[i])
-            if v.next[num(s[i])] is None:
-                self.vertices.append(Vertex(self.size, self.alpha, v, s[i]))
-                v.next[num(s[i])] = self.last
-            v = v.next[num(s[i])]
+        char: str
+        for char in s:
+            idx: int = _num(char)
+            if v.next[idx] is None:
+                self.vertices.append(Vertex(self.size, self.alpha, v, char))
+                v.next[idx] = self.last
+            v = v.next[idx]
         v.is_terminal = True
+        v.pattern_numbers.append(pattern_num)
 
-    def find(self, s) -> bool:
+    def find(self, s: str) -> bool:
         """
         Проверяет, есть ли строка в дереве.
         :param s: Строка для поиска.
         :return: True, если строка найдена, иначе False.
         """
         v: Vertex = self.root
-        for i in range(len(s)):
-            if v.next[num(s[i])] is None:
+        for char in s:
+            idx: int = _num(char)
+            if v.next[idx] is None:
                 return False
-            v = v.next[num(s[i])]
+            v: Vertex = v.next[idx]
         return v.is_terminal
 
     def get_link(self, v: Vertex) -> Vertex:
@@ -79,8 +113,10 @@ class Trie:
         :return: Суффиксная ссылка для вершины v.
         """
         if v.sufflink is None:
-            v.sufflink = self.root if v == self.root or v.parent == self.root \
-                else self.go(self.get_link(v.parent), v.pchar)
+            if self.root in (v, v.parent):
+                v.sufflink = self.root
+            else:
+                v.sufflink = self.go(self.get_link(v.parent), v.pchar)
         return v.sufflink
 
     def go(self, v: Vertex, c: str) -> Vertex:
@@ -90,12 +126,12 @@ class Trie:
         :param c:
         :return:
         """
-        idx = num(c)
-        if v.go[num(c)] is None:
-            if v.next[num(c)] is not None:
-                v.go[num(c)] = v.next[num(c)]
+        idx = _num(c)
+        if v.go[idx] is None:
+            if v.next[idx] is not None:
+                v.go[idx] = v.next[idx]
             elif v == self.root:
-                v.go[num(c)] = self.get_link(v).go(c)
+                v.go[idx] = self.root
             else:
-                v.go[num(c)] = self.go(self.get_link(v), c)
-        return v.go[num(c)]
+                v.go[idx] = self.go(self.get_link(v), c)
+        return v.go[idx]
