@@ -16,24 +16,23 @@ def aho_corasick_search():
     Алгоритм Ахо-Корасика для поиска всех образцов в тексте.
     :return: None
     """
-    alpha: int = 5
-    text: str = input().strip()
-    n: int = int(input())
-    patterns: list[str] = []
-    lengths: list[int] = []
-    trie: Trie = Trie(alpha)
+    alpha: int = 5 # размер алфавита
+    text: str = input().strip() # текст для поиска
+    n: int = int(input()) # количество образцов
+    patterns: list[str] = [] # список образцов
+    lengths: list[int] = [] # длины образцов
+    trie: Trie = Trie(alpha) # создание префиксного дерева (Бора)
     for idx in range(n):
-        pattern = input().strip()
-        patterns.append(pattern)
+        pattern = input().strip() # считывание образца
+        patterns.append(pattern) # добавление образца в список
         trie.add(pattern, idx + 1)  # Нумерация шаблонов с 1
-        lengths.append(len(pattern))
+        lengths.append(len(pattern)) # добавление длины образца в список
 
     occurrences: list[tuple[int, int]] = []
-    current: Vertex = trie.root
+    v: Vertex = trie.root
     for i in range(len(text)):
         c: str = text[i]
-        current: Vertex = trie.go(current, c)
-        v: Vertex = current
+        v: Vertex = trie.go(v, c)
         while v != trie.root:
             if v.is_terminal:
                 for p_num in v.pattern_numbers:
@@ -44,6 +43,7 @@ def aho_corasick_search():
 
     # Сортировка и вывод
     occurrences.sort(key=lambda x: (x[0], x[1]))
+
     pos: int
     p: int
     for pos, p in occurrences:
@@ -56,7 +56,7 @@ def search_with_wildcard():
     """
     text: str = input().strip()
     pattern: str = input().strip()
-    wildcard = input().strip()
+    wildcard: str = input().strip()
     len_text, len_pattern = len(text), len(pattern)
 
     segments: list[tuple[str, int]] = []

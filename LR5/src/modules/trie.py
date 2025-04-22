@@ -106,12 +106,11 @@ class Trie:
         char: str
         for i, char in enumerate(s):
             v = self.go(v, char)
-            u = v
-            while u is not self.root:
-                if u.is_terminal:
-                    for pid in u.pattern_numbers:
+            while v is not self.root:
+                if v.is_terminal:
+                    for pid in v.pattern_numbers:
                         res.append((i, pid))
-                u = self.get_link(u)
+                v = self.get_link(v)
         return res
 
     def get_link(self, v: Vertex) -> Vertex:

@@ -29,16 +29,16 @@ class Vertex:
     @property
     def is_terminal(self) -> bool:
         """
-        Возвращает True, если вершина является терминальной.
-        :return: True, если вершина является терминальной, иначе False.
+        Возвращает True, если заканчивается в этой вершине строка.
+        :return: True, если заканчивается, иначе False.
         """
         return self.__is_terminal
 
     @is_terminal.setter
     def is_terminal(self, value: bool) -> None:
         """
-        Устанавливает флаг терминальности вершины.
-        :param value: True, если вершина является терминальной, иначе False.
+        Устанавливает флаг окончания строки.
+        :param value: True, если заканчивается в этой вершине строка, иначе False.
         :return: None
         """
         self.__is_terminal = value
