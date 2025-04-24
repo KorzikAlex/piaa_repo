@@ -11,7 +11,7 @@ def _num(c: str) -> int:
     :param c: Буква
     :return: Номер буквы
     """
-    alphabet: dict = {
+    alphabet: dict[str, int] = {
         'A': 0,
         'C': 1,
         'G': 2,
@@ -19,6 +19,30 @@ def _num(c: str) -> int:
         'N': 4
     }
     return alphabet[c]
+
+
+def find_overlaps(occurrences: list[tuple[int, int, int]]) -> list[int]:
+    """
+    Возвращает список уникальных номеров
+    :param occurrences:
+    """
+    # Предполагаем, что occurrences уже отсортирован по (start, end)
+    overlaps: set = set()
+    for i in range(len(occurrences) - 1):
+        s1: int
+        e1: int
+        p1: int
+        s1, e1, p1 = occurrences[i]
+
+        s2: int
+        e2: int
+        p2: int
+        s2, e2, p2 = occurrences[i + 1]
+        if e1 >= s2:
+            overlaps.add(p1)
+            overlaps.add(p2)
+    # Возвращаем уже отсортированный список уникальных номеров
+    return sorted(overlaps)
 
 
 class Trie:
