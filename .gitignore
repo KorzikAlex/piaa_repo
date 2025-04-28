@@ -199,7 +199,11 @@ cython_debug/
 *.out
 *.app
 
+# Cmake files and dirs
 .cmake
 cmake-build-debug
 cmake-build-release
 build
+
+# Image files
+*.png

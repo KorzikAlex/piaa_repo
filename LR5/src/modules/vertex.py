@@ -29,7 +29,7 @@ class Vertex:
     @property
     def is_terminal(self) -> bool:
         """
-        Возвращает True, если заканчивается в этой вершине строка.
+        Возвращает True, если заканчивается в этой вершине образец.
         :return: True, если заканчивается, иначе False.
         """
         return self.__is_terminal
@@ -37,8 +37,8 @@ class Vertex:
     @is_terminal.setter
     def is_terminal(self, value: bool) -> None:
         """
-        Устанавливает флаг окончания строки.
-        :param value: True, если заканчивается в этой вершине строка, иначе False.
+        Устанавливает флаг окончания образца.
+        :param value: True, если заканчивается в этой вершине образец, иначе False.
         :return: None
         """
         self.__is_terminal = value
@@ -79,7 +79,7 @@ class Vertex:
     @property
     def pchar(self) -> str or None:
         """
-        Возвращает символ, по которому произошел переход в эту вершину.
+        Возвращает символ, по которому произошел переход в эту вершину (символ родительской вершины).
         :return: Символ, по которому произошел переход в эту вершину.
         """
         return self.__pchar
