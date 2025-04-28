@@ -1,4 +1,2 @@
-# Usage: .\run.ps1
-# Description: Run the main.py file
-
-python.exe main.py
+pip install -r requirements.txt
+python main.py
