@@ -83,3 +83,12 @@ class Vertex:
         :return: Символ, по которому произошел переход в эту вершину.
         """
         return self.__pchar
+
+    def __str__(self) -> str:
+        parent_id = self.parent.id if self.parent else "None"
+        sufflink_id = self.sufflink.id if self.sufflink else "None"
+        next_ids = [(i, v.id) for i, v in enumerate(self.next) if v is not None]
+        go_ids = [(i, v.id) for i, v in enumerate(self.go) if v is not None]
+        return (f"Vertex(id={self.id}, pchar='{self.pchar}', parent={parent_id}, "
+                f"is_terminal={self.is_terminal}, pattern_numbers={self.pattern_numbers}, "
+                f"sufflink={sufflink_id}, next={next_ids}, go={go_ids})")
