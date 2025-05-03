@@ -94,15 +94,18 @@ class Trie:
         :return: None
         """
         v: Vertex = self.root
+        print(f"\nДобавление образца '{s}' (номер {pattern_num})")
         char: str
         for char in s:
             idx: int = _num(char)
             if v.next[idx] is None:
+                print(f"\tСоздана вершина {self.size} для символа '{char}' (родитель {v.id})")
                 self.vertices.append(Vertex(self.size, self.alpha, v, char))
                 v.next[idx]: Vertex = self.last
             v: Vertex = v.next[idx]
         v.is_terminal = True
         v.pattern_numbers.append(pattern_num)
+        print(f"\tВершина {v.id} помечена как терминальная для шаблонов {pattern_num}")
 
     def search(self, s: str) -> list[tuple[int, int]]:
         """
@@ -112,18 +115,24 @@ class Trie:
         """
         res: list[tuple[int, int]] = []
         v: Vertex = self.root
+        print(f"\nНачало поиска в строке: '{s}'")
 
         i: int
         char: str
         for i, char in enumerate(s):
+            print(f"\nШаг {i + 1}: Символ '{char}' (позиция {i + 1})")
             v: Vertex = self.go(v, char)
+            print(f"Текущая вершина: {v.id}")
             u: Vertex = v
             while u is not self.root:
                 if u.is_terminal:
+                    print(f"\tНайдена терминальная вершина {u.id} (шаблоны: {u.pattern_numbers})")
                     pid: int
                     for pid in u.pattern_numbers:
                         res.append((i, pid))
+                print(f"\tПереход по суффиксной ссылке из {u.id} -> {self.get_link(u).id}")
                 u: Vertex = self.get_link(u)
+        print("\nПоиск завершен. Найдено совпадений:", len(res))
         return res
 
     def get_link(self, v: Vertex) -> Vertex:
@@ -134,9 +143,12 @@ class Trie:
         """
         if v.sufflink is None:
             if self.root in (v, v.parent):
+                print(f"\tСуффиксная ссылка вершины {v.id} установлена на корень")
                 v.sufflink = self.root
             else:
+                print(f"\tВычисление суффиксной ссылки для {v.id}: через родителя {v.parent.id} и символ '{v.pchar}'")
                 v.sufflink = self.go(self.get_link(v.parent), v.pchar)
+            print(f"\tВершина {v.id}: суффиксная ссылка -> {v.sufflink.id}")
         return v.sufflink
 
     def go(self, v: Vertex, char: str) -> Vertex:
@@ -150,10 +162,13 @@ class Trie:
         v.go[idx]: Vertex
         if v.go[idx] is None:
             if v.next[idx] is not None:
+                print(f"\tПрямой переход из {v.id} по '{char}' -> {v.next[idx].id}")
                 v.go[idx]: Vertex = v.next[idx]
             elif v == self.root:
+                print(f"\tКорневой переход из {v.id} по '{char}' -> корень")
                 v.go[idx]: Vertex = self.root
             else:
+                print(f"\tРекурсивный переход из {v.id} по '{char}' через суффиксную ссылку")
                 v.go[idx]: Vertex = self.go(self.get_link(v), char)
         return v.go[idx]
 
@@ -163,7 +178,7 @@ class Trie:
         :return: None
         """
         v: Vertex
-        for v in self.vertices:
+        for v in self.vertices[1:]:
             self.get_link(v)
 
     def visualize(self, file_name: str = "aho_corasick") -> None:
@@ -262,4 +277,4 @@ class Trie:
                     char: str = _char(idx)
                     go_trans.append(f"'{char}': {go_v.id}")
             go_str: str = ', '.join(go_trans) if go_trans else 'нет'
-            print(f"Вершина {v.id}: суффиксная ссылка -> {suff_id}, переходы go: {go_str}")
+            print(f"Вершина {v.id}: суффиксная ссылка -> {suff_id}, переходы: {go_str}")
