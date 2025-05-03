@@ -31,9 +31,7 @@ def aho_corasick_search() -> None:
         print(f"Добавлен образец {i + 1}: '{pattern}'")
 
     # Визуализация
-    # trie.print_bor_structure()
     trie.precompute_sufflinks()
-    # trie.print_automaton_structure()
     trie.visualize("aho_corasick_automaton")  # создание графического представления автомата
     # Подсчет и вывод числа вершин
     print("Количество вершин в автомате:", trie.size)
@@ -108,9 +106,7 @@ def search_with_wildcard() -> None:
     print("Количество вершин в автомате:", trie.size)
 
     # Визуализация автомата
-    # trie.print_bor_structure()
     trie.precompute_sufflinks()
-    # trie.print_automaton_structure()
     trie.visualize("aho_corasick_wildcard_automaton")  # создание графического представления автомата
 
     occ: list[tuple[int, int]] = trie.search(text)  # поиск образцов в тексте
@@ -130,6 +126,8 @@ def search_with_wildcard() -> None:
             counts[p] += 1  # увеличение счетчика для позиции p
 
     print("\nПозиции с полным совпадением:")
+    i: int
+    c: int
     for i, c in enumerate(counts):
         if c == needed:
             print(i + 1)  # вывод позиций, где все сегменты найдены

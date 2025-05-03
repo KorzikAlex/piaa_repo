@@ -9,7 +9,8 @@ class Vertex:
     Класс, представляющий вершину в автомате.
     """
 
-    def __init__(self, id_: int, alpha: int, parent: "Vertex" or None = None, pchar: str or None = None) -> None:
+    def __init__(self, id_: int, alpha: int,
+                 parent: "Vertex" or None = None, pchar: str or None = None) -> None:
         """
         Конструктор класса Vertex.
         :param id_: Идентификатор вершины.
@@ -79,7 +80,8 @@ class Vertex:
     @property
     def pchar(self) -> str or None:
         """
-        Возвращает символ, по которому произошел переход в эту вершину (символ родительской вершины).
+        Возвращает символ, по которому произошел переход в эту вершину
+        (символ родительской вершины).
         :return: Символ, по которому произошел переход в эту вершину.
         """
         return self.__pchar

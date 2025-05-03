@@ -99,8 +99,8 @@ class Trie:
             idx: int = _num(char)
             if v.next[idx] is None:
                 self.vertices.append(Vertex(self.size, self.alpha, v, char))
-                v.next[idx] = self.last
-            v = v.next[idx]
+                v.next[idx]: Vertex = self.last
+            v: Vertex = v.next[idx]
         v.is_terminal = True
         v.pattern_numbers.append(pattern_num)
 
@@ -117,12 +117,13 @@ class Trie:
         char: str
         for i, char in enumerate(s):
             v: Vertex = self.go(v, char)
-            while v is not self.root:
-                if v.is_terminal:
+            u: Vertex = v
+            while u is not self.root:
+                if u.is_terminal:
                     pid: int
-                    for pid in v.pattern_numbers:
+                    for pid in u.pattern_numbers:
                         res.append((i, pid))
-                v: Vertex = self.get_link(v)
+                u: Vertex = self.get_link(u)
         return res
 
     def get_link(self, v: Vertex) -> Vertex:
@@ -182,21 +183,25 @@ class Trie:
             v: Vertex
             for v in self.vertices:
                 if v == self.root:
-                    label = "root" + f" ({v.id})"
+                    label: str = "root" + f" ({v.id})"
                 else:
-                    label = (v.pchar if v.pchar is not None else '') + f" ({v.id})"
+                    label: str = (v.pchar if v.pchar is not None else '') + f" ({v.id})"
                 if v.is_terminal:
-                    automaton.node(str(v.id), label, shape="circle", style="filled", fillcolor="lightblue")
+                    automaton.node(str(v.id), label, shape="circle",
+                                   style="filled", fillcolor="lightblue")
                 else:
                     automaton.node(str(v.id), label, shape="circle")
 
             # Добавление переходов
+            v: Vertex
             for v in self.vertices:
-                for _, next_v in enumerate(v.next):
+                next_v: Vertex
+                for next_v in v.next:
                     if next_v is not None:
-                        automaton.edge(str(v.id), str(next_v.id))  # Без метки
+                        automaton.edge(str(v.id), str(next_v.id))
 
             # Добавление суффиксных ссылок
+            v: Vertex
             for v in self.vertices:
                 if v.sufflink is not None and v.sufflink != v:
                     automaton.edge(str(v.id), str(v.sufflink.id), style="dashed", color="red", constraint="false")
@@ -207,12 +212,13 @@ class Trie:
             # Пример обычной вершины
             legend.node("legend_node", label="Обычная вершина (id)", shape="circle")
             # Пример терминальной вершины
-            legend.node("legend_terminal", label="Терминальная вершина (id)", shape="circle", style="filled",
-                        fillcolor="lightblue")
+            legend.node("legend_terminal", label="Терминальная вершина (id)", shape="circle",
+                        style="filled", fillcolor="lightblue")
             # Пример перехода
             legend.edge("legend_node", "legend_terminal", label="Переход")
             # Пример суффиксной ссылки
-            legend.edge("legend_terminal", "legend_node", style="dashed", color="red", label="Суффиксная ссылка")
+            legend.edge("legend_terminal", "legend_node", style="dashed",
+                        color="red", label="Суффиксная ссылка")
 
         # Сохранение графа
         dot.render(file_name, format="png", cleanup=True, view=True)
@@ -225,16 +231,20 @@ class Trie:
         """
         print("\nСтруктура бора:")
         for v in self.vertices:
-            parent_id = v.parent.id if v.parent else "None"
-            pchar = v.pchar if v.pchar else ''
-            transitions = []
+            parent_id: int = v.parent.id if v.parent else -1
+            pchar: str = v.pchar if v.pchar else ''
+            transitions: list[str] = []
+            idx: int
+            next_v: Vertex
             for idx, next_v in enumerate(v.next):
                 if next_v is not None:
-                    char = _char(idx)
+                    char: str = _char(idx)
                     transitions.append(f"'{char}': {next_v.id}")
-            trans_str = ', '.join(transitions) if transitions else 'нет'
-            term_info = f", терминальная (шаблоны: {v.pattern_numbers})" if v.is_terminal else ""
-            print(f"Вершина {v.id}: родитель {parent_id}, символ '{pchar}'{term_info}, переходы: {trans_str}")
+            trans_str: str = ', '.join(transitions) if transitions else 'нет'
+            term_info: str = (f", терминальная "
+                              f"(шаблоны: {v.pattern_numbers})") if v.is_terminal else ""
+            print(f"Вершина {v.id}: родитель {parent_id}, "
+                  f"символ '{pchar}'{term_info}, переходы: {trans_str}")
 
     def print_automaton_structure(self) -> None:
         """
@@ -243,11 +253,13 @@ class Trie:
         """
         print("\nСтруктура автомата (суффиксные ссылки и переходы):")
         for v in self.vertices:
-            suff_id = v.sufflink.id if v.sufflink else "None"
-            go_trans = []
+            suff_id: int = v.sufflink.id if v.sufflink else -1
+            go_trans: list[str] = []
+            idx: int
+            go_v: Vertex
             for idx, go_v in enumerate(v.go):
                 if go_v is not None:
-                    char = _char(idx)
+                    char: str = _char(idx)
                     go_trans.append(f"'{char}': {go_v.id}")
-            go_str = ', '.join(go_trans) if go_trans else 'нет'
+            go_str: str = ', '.join(go_trans) if go_trans else 'нет'
             print(f"Вершина {v.id}: суффиксная ссылка -> {suff_id}, переходы go: {go_str}")
