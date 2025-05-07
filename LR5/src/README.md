@@ -36,7 +36,7 @@ sudo dnf install graphviz
 ```
 Скомпилированные сборки под **Linux** и **Windows** можно также найти на [Gitlab](https://gitlab.com/graphviz/graphviz/-/releases).
 
-Был добавлен ```compare.sh```, просто запустите его.
+Был добавлен ```prepare.sh```, просто запустите его.
 ```shell
 ./prepare.sh
 ```
