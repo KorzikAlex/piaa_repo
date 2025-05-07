@@ -18,11 +18,12 @@ def visualize_and_print(trie: Trie, filename: str) -> None:
     """
     trie.print_bor_structure()
     print("\nВычисление оставшихся суффиксных ссылок")
-    trie.precompute_sufflinks() # вычисление всех суффиксных ссылок
+    trie.precompute_sufflinks()  # вычисление всех суффиксных ссылок
     trie.print_automaton_structure()
     trie.visualize(filename)  # создание графического представления автомата
     # Подсчет и вывод числа вершин
     print("Количество вершин в автомате:", trie.size)
+
 
 def aho_corasick_search() -> None:
     """
@@ -148,5 +149,5 @@ def main() -> None:
     search_with_wildcard()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

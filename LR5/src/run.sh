@@ -1,3 +1,2 @@
-pip install --upgrade pip
-pip install -r requirements.txt
+#!/bin/bash
 python3 main.py
