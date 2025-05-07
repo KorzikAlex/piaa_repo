@@ -9,12 +9,17 @@
 Для запуска на **Windows** 
 необходимо скачать EXE-файл **graphviz** с [официального сайта](https://graphviz.org/download/#windows).
 
-Или можно установить с помощью менеджера пакета **winget** (обычно предустановлена вместе с Windows):
+Или можно установить с помощью менеджера пакета **winget** (обычно предустановлен вместе с Windows):
 ```powershell
 winget install -i graphviz
 ```
 При необходимости **перезагрузите** компьютер.
 Проверьте, что исполняемый файл Graphviz добавлен в переменную PATH.
+
+Был добавлен ```prepare.ps1```, просто запустите его.
+```powershell
+./prepare.ps1
+```
 
 <h2> Linux </h2>
 
@@ -30,3 +35,9 @@ sudo apt install graphviz
 sudo dnf install graphviz
 ```
 Скомпилированные сборки под **Linux** и **Windows** можно также найти на [Gitlab](https://gitlab.com/graphviz/graphviz/-/releases).
+
+Был добавлен ```compare.sh```, просто запустите его.
+```shell
+./prepare.sh
+```
+Для Linux всё равно необходимо установить зависимость Graphviz с помощью команд выше.
