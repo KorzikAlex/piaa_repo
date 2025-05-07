@@ -203,7 +203,7 @@ class Trie:
                     label: str = (v.pchar if v.pchar is not None else '') + f" ({v.id})"
                 if v.is_terminal:
                     automaton.node(str(v.id), label, shape="circle",
-                                   style="filled", fillcolor="lightblue")
+                                    style="filled", fillcolor="lightblue")
                 else:
                     automaton.node(str(v.id), label, shape="circle")
 
@@ -257,9 +257,9 @@ class Trie:
                     transitions.append(f"'{char}': {next_v.id}")
             trans_str: str = ', '.join(transitions) if transitions else 'нет'
             term_info: str = (f", терминальная "
-                              f"(шаблоны: {v.pattern_numbers})") if v.is_terminal else ""
+                                f"(шаблоны: {v.pattern_numbers})") if v.is_terminal else ""
             print(f"Вершина {v.id}: родитель {parent_id}, "
-                  f"символ '{pchar}'{term_info}, переходы: {trans_str}")
+                    f"символ '{pchar}'{term_info}, переходы: {trans_str}")
 
     def print_automaton_structure(self) -> None:
         """

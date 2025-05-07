@@ -10,7 +10,7 @@ class Vertex:
     """
 
     def __init__(self, id_: int, alpha: int,
-                 parent: "Vertex" or None = None, pchar: str or None = None) -> None:
+                    parent: "Vertex" or None = None, pchar: str or None = None) -> None:
         """
         Конструктор класса Vertex.
         :param id_: Идентификатор вершины.
