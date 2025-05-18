@@ -61,7 +61,9 @@ def aho_corasick_search() -> None:
                     start: int = i - lengths[p_num - 1] + 1  # начало образца
                     if start >= 0:
                         occ.append((start + 1, p_num))  # Переводим в 1-based индекс
-            v: Vertex = trie.get_link(v)  # переход по суффиксной ссылке
+            # Используем терминальную ссылку вместо полного перебора суффиксных ссылок
+            print(f"\tПереход по терминальной ссылке: {v.id}." if v != trie.root else "Переход в корень.")
+            v: Vertex = v.tlink if v.tlink is not None else trie.root
 
     # Сортировка и вывод
     occ.sort(key=lambda x: (x[0], x[1]))

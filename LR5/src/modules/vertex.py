@@ -24,6 +24,7 @@ class Vertex:
         self.__parent: Vertex or None = parent  # Родительская вершина
         self.__pchar: str or None = pchar  # Символ, по которому произошел переход в эту вершину
         self.__sufflink: Vertex or None = None  # Суффиксная ссылка
+        self.__tlink: Vertex or None = None  # Терминальная ссылка
         self.go: list[Vertex | None] = [None] * alpha  # Список переходов по символам
         self.pattern_numbers: list = []  # Номера шаблонов, заканчивающихся здесь
 
@@ -61,13 +62,30 @@ class Vertex:
         return self.__sufflink
 
     @sufflink.setter
-    def sufflink(self, value) -> None:
+    def sufflink(self, value: "Vertex" or None) -> None:
         """
         Устанавливает суффиксную ссылку.
         :param value: Суффиксная ссылка.
         :return: None
         """
         self.__sufflink = value
+
+    @property
+    def tlink(self) -> "Vertex" or None:
+        """
+        Возвращает терминальную ссылку.
+        :return: Терминальная ссылка.
+        """
+        return self.__tlink
+
+    @tlink.setter
+    def tlink(self, value: "Vertex" or None) -> None:
+        """
+        Устанавливает терминальную ссылку.
+        :param value: Терминальная ссылка.
+        :return: None
+        """
+        self.__tlink = value
 
     @property
     def parent(self) -> "Vertex" or None:
@@ -89,8 +107,9 @@ class Vertex:
     def __str__(self) -> str:
         parent_id = self.parent.id if self.parent else "None"
         sufflink_id = self.sufflink.id if self.sufflink else "None"
+        tlink_id = self.tlink.id if self.tlink else "None"
         next_ids = [(i, v.id) for i, v in enumerate(self.next) if v is not None]
         go_ids = [(i, v.id) for i, v in enumerate(self.go) if v is not None]
         return (f"Vertex(id={self.id}, pchar='{self.pchar}', parent={parent_id}, "
                 f"is_terminal={self.is_terminal}, pattern_numbers={self.pattern_numbers}, "
-                f"sufflink={sufflink_id}, next={next_ids}, go={go_ids})")
+                f"sufflink={sufflink_id}, tlink={tlink_id}, next={next_ids}, go={go_ids})")

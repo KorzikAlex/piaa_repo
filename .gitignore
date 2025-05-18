@@ -207,3 +207,8 @@ build
 
 # Image files
 *.png
+
+# Exclude folders
+exclude
+
+test_file.py

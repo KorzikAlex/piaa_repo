@@ -104,8 +104,8 @@ class Trie:
                 v.next[idx]: Vertex = self.last
             v: Vertex = v.next[idx]
         v.is_terminal = True
-        v.pattern_numbers.append(pattern_num)
         print(f"\tВершина {v.id} помечена как терминальная для шаблонов {pattern_num}")
+        v.pattern_numbers.append(pattern_num)
 
     def search(self, s: str) -> list[tuple[int, int]]:
         """
@@ -130,8 +130,8 @@ class Trie:
                     pid: int
                     for pid in u.pattern_numbers:
                         res.append((i, pid))
-                print(f"\tПереход по суффиксной ссылке из {u.id} -> {self.get_link(u).id}")
-                u: Vertex = self.get_link(u)
+                u: Vertex = u.tlink if u.tlink is not None else self.root
+                print(f"\tПереход по терминальной ссылке: {u.id}." if u != self.root else "Переход в корень.")
         print("\nПоиск завершен. Найдено совпадений:", len(res))
         return res
 
@@ -149,6 +149,13 @@ class Trie:
                 print(f"\tВычисление суффиксной ссылки для {v.id}: через родителя {v.parent.id} и символ '{v.pchar}'")
                 v.sufflink = self.go(self.get_link(v.parent), v.pchar)
             print(f"\tВершина {v.id}: суффиксная ссылка -> {v.sufflink.id}")
+            # Установка терминальной ссылки:
+            v.tlink = v.sufflink if v.sufflink.is_terminal else v.sufflink.tlink
+            # Вывод информации о терминальной ссылке
+            if v.tlink:
+                print(f"\tТерминальная ссылка вершины {v.id} установлена на {v.tlink.id}")
+            else:
+                print(f"\tТерминальная ссылка вершины {v.id} отсутствует")
         return v.sufflink
 
     def go(self, v: Vertex, char: str) -> Vertex:
@@ -170,7 +177,11 @@ class Trie:
             else:
                 print(f"\tРекурсивный переход из {v.id} по '{char}' через суффиксную ссылку")
                 v.go[idx]: Vertex = self.go(self.get_link(v), char)
-        return v.go[idx]
+        node: Vertex = v.go[idx]
+        if node.sufflink is None:
+            # Вызов “ленивого” get_link сам установит sufflink и tlink
+            self.get_link(node)
+        return node
 
     def precompute_sufflinks(self) -> None:
         """
@@ -188,7 +199,7 @@ class Trie:
         :return: None
         """
         dot: Digraph = Digraph(comment="Aho-Corasick Automaton")
-        dot.attr(rankdir="TB", fontsize="14")  # Вертикальное расположение графа
+        dot.attr(rankdir="TB", fontsize="18", fontname="Arial")  # Вертикальное расположение графа
 
         with dot.subgraph(name="cluster_automaton") as automaton:
             # Настройка графа
@@ -215,25 +226,38 @@ class Trie:
                     if next_v is not None:
                         automaton.edge(str(v.id), str(next_v.id))
 
+            # Добавление терминальных ссылок
+            v: Vertex
+            for v in self.vertices:
+                if v.tlink is not None:
+                    automaton.edge(str(v.id), str(v.tlink.id), style="dotted",
+                                    color="blue", constraint="false")
+
             # Добавление суффиксных ссылок
             v: Vertex
             for v in self.vertices:
-                if v.sufflink is not None and v.sufflink != v:
-                    automaton.edge(str(v.id), str(v.sufflink.id), style="dashed", color="red", constraint="false")
+                if v.sufflink is not None and v.sufflink != v and v.sufflink != v.tlink:
+                    automaton.edge(str(v.id), str(v.sufflink.id), style="dashed",
+                                    color="red", constraint="false")
 
         with dot.subgraph(name="cluster_legend") as legend:
             # Добавление легенды
-            legend.attr(label="Легенда", style="dotted")
+            legend.attr(label="Легенда", style="dotted", fontname="Arial", margin="20")
             # Пример обычной вершины
-            legend.node("legend_node", label="Обычная вершина (id)", shape="circle")
+            legend.node("legend_node", label="Обычная\nвершина (id)", shape="circle",
+                        width="0.5", height="0.3", fontsize="11")
             # Пример терминальной вершины
-            legend.node("legend_terminal", label="Терминальная вершина (id)", shape="circle",
-                        style="filled", fillcolor="lightblue")
+            legend.node("legend_terminal", label="Терминальная\nвершина (id)", shape="circle",
+                        style="filled", fillcolor="lightblue", width="0.5",
+                        height="0.3", fontsize="11")
             # Пример перехода
-            legend.edge("legend_node", "legend_terminal", label="Переход")
+            legend.edge("legend_node", "legend_terminal", label="Переход", fontsize="11")
             # Пример суффиксной ссылки
             legend.edge("legend_terminal", "legend_node", style="dashed",
-                        color="red", label="Суффиксная ссылка")
+                        color="red", label="Суффиксная\nссылка", fontsize="11")
+            # Пример терминальной ссылки
+            legend.edge("legend_terminal", "legend_node", style="dotted",
+                        color="blue", label="Терминальная\nссылка", fontsize="11")
 
         # Сохранение графа
         dot.render(file_name, format="png", cleanup=True, view=True)
@@ -256,8 +280,7 @@ class Trie:
                     char: str = _char(idx)
                     transitions.append(f"'{char}': {next_v.id}")
             trans_str: str = ', '.join(transitions) if transitions else 'нет'
-            term_info: str = (f", терминальная "
-                                f"(шаблоны: {v.pattern_numbers})") if v.is_terminal else ""
+            term_info: str = f", терминальная (шаблоны: {v.pattern_numbers})" if v.is_terminal else ""
             print(f"Вершина {v.id}: родитель {parent_id}, "
                     f"символ '{pchar}'{term_info}, переходы: {trans_str}")
 
@@ -269,6 +292,7 @@ class Trie:
         print("\nСтруктура автомата (суффиксные ссылки и переходы):")
         for v in self.vertices:
             suff_id: int = v.sufflink.id if v.sufflink else -1
+            tlink_id = v.tlink.id if v.tlink else -1
             go_trans: list[str] = []
             idx: int
             go_v: Vertex
@@ -277,4 +301,5 @@ class Trie:
                     char: str = _char(idx)
                     go_trans.append(f"'{char}': {go_v.id}")
             go_str: str = ', '.join(go_trans) if go_trans else 'нет'
-            print(f"Вершина {v.id}: суффиксная ссылка -> {suff_id}, переходы: {go_str}")
+            print(f"Вершина {v.id}: суффиксная ссылка -> {suff_id}, "
+                    f"терминальная ссылка -> {tlink_id}, переходы: {go_str}")
