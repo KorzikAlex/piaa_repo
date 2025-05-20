@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# *- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """
 Модуль для загрузки и сохранения матрицы весов
 """
@@ -14,8 +14,6 @@ def generate_mx(n: int, symmetric: bool = True, max_weight: int = 100) -> list[l
     :param max_weight: Максимальный вес ребра
     :return: list[list[int]] Матрица весов
     """
-    if not 5 <= n <= 100:
-        raise ValueError("Размерность матрицы должна быть в диапазоне от 5 до 100 включительно.")
     mx: list[list[int]] = [[0] * n for _ in range(n)]
     for i in range(n):
         for j in range(i + 1, n):
@@ -25,26 +23,15 @@ def generate_mx(n: int, symmetric: bool = True, max_weight: int = 100) -> list[l
     return mx
 
 
-def load_mx(file_name: str) -> tuple[int, list[list[int]]] | None:
+def load_mx(file_name: str) -> tuple[int, list[list[int]]]:
     """
     Функция для загрузки файла.
     :param file_name: Имя файла
     :return: list[str] | None Список строк из файла
     """
-    try:
-        with open(file=file_name, mode="rt", encoding="UTF-8") as file:
-            n: int = int(file.readline().strip())
-            return n, [[int(i) for i in line.strip().split()] for line in file.readlines()]
-        return None
-    except FileNotFoundError:
-        print(f"Файл '{file_name}' не найден.")
-        return None
-    except ValueError:
-        print("Некорректный формат файла.")
-        return None
-    except Exception as e:
-        print("Ошибка:", e)
-        return None
+    with open(file=file_name, mode="rt", encoding="UTF-8") as file:
+        n: int = int(file.readline().strip())
+        return n, [[int(i) for i in line.strip().split()] for line in file.readlines()]
 
 
 def write_mx(file_name: str, weight_matrix: list[list[int]]) -> None:
