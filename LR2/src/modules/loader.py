@@ -3,10 +3,10 @@
 """
 Модуль для загрузки и сохранения матрицы весов
 """
-import random
+from random import randint
 
 
-def generate_mx(n: int, symmetric: bool = True, max_weight: int = 100) -> list[list[int]]:
+def generate_mx(n: int, symmetric: bool = False, max_weight: int = 100) -> list[list[int]]:
     """
     Функция для генерации матрицы весов.
     :param symmetric: Если True, то матрица будет симметричной
@@ -17,9 +17,9 @@ def generate_mx(n: int, symmetric: bool = True, max_weight: int = 100) -> list[l
     mx: list[list[int]] = [[0] * n for _ in range(n)]
     for i in range(n):
         for j in range(i + 1, n):
-            w: int = random.randint(1, max_weight)
+            w: int = randint(1, max_weight)
             mx[i][j]: int = w
-            mx[j][i]: int = w if symmetric else random.randint(1, max_weight)
+            mx[j][i]: int = w if symmetric else randint(1, max_weight)
     return mx
 
 
@@ -41,18 +41,8 @@ def write_mx(file_name: str, weight_matrix: list[list[int]]) -> None:
     :param file_name: Имя файла
     :return: None
     """
-    try:
-        with open(file=file_name, mode="wt", encoding="UTF-8") as file:
-            file.write(f"{len(weight_matrix)}\n")
-            for row in weight_matrix:
-                file.write(" ".join(map(str, row)) + "\n")
-            return None
-    except FileNotFoundError:
-        print(f"Файл '{file_name}' не найден.")
-        return None
-    except ValueError:
-        print("Некорректный формат матрицы.")
-        return None
-    except Exception as e:
-        print("Ошибка:", e)
+    with open(file=file_name, mode="wt", encoding="UTF-8") as file:
+        file.write(f"{len(weight_matrix)}\n")
+        for row in weight_matrix:
+            file.write(" ".join(map(str, row)) + "\n")
         return None

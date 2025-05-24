@@ -1,17 +1,17 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """
-Это файл для парсинга аргументов командной строки.
+Это файл содержит функции для парсинга аргументов командной строки.
 """
-import argparse
+from argparse import ArgumentParser, Namespace, RawTextHelpFormatter
 
 
-def get_args():
+def get_args() -> Namespace:
     """
     Получить аргументы командной строки.
     :return: Аргументы командной строки
     """
-    parser: argparse.ArgumentParser = argparse.ArgumentParser(
+    parser: ArgumentParser = ArgumentParser(
         description=(
             "description:\n"
             "Решение задачи коммивояжёра двумя методами:\n"
@@ -23,11 +23,11 @@ def get_args():
         epilog=(
             "epilog:\n"
             "ДП (DP) - Динамическое программирование\n"
-            "АЛШ-2 - Алгоритм лучшего соседа \n"
+            "АЛШ-2 - Алгоритм лучшего соседа (на основе МОД) \n"
             "В файле матрицы весов на первой строке указывается количество городов (n), "
             "на следующих n строках — матрица.\n"
         ),
-        formatter_class=argparse.RawTextHelpFormatter)
+        formatter_class=RawTextHelpFormatter)
 
     parser.add_argument("-i", "--input", type=str, dest="input",
                         help=(
@@ -50,5 +50,5 @@ def get_args():
                             "approx — приближённый (АЛШ-2). "
                             "По умолчанию exact."
                         ))
-    args = parser.parse_args()
+    args: Namespace = parser.parse_args()
     return args
