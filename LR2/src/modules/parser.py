@@ -11,6 +11,7 @@ def get_args() -> Namespace:
     Получить аргументы командной строки.
     :return: Аргументы командной строки
     """
+    # Создание парсера аргументов
     parser: ArgumentParser = ArgumentParser(
         description=(
             "description:\n"
@@ -29,6 +30,7 @@ def get_args() -> Namespace:
         ),
         formatter_class=RawTextHelpFormatter)
 
+    # Параметры командной строки
     parser.add_argument("-i", "--input", type=str, dest="input",
                         help=(
                             "Имя файла с матрицей. "

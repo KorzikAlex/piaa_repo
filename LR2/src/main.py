@@ -25,6 +25,7 @@ def main() -> None:
     """
     args: Namespace = get_args()
 
+    # Генерация матрицы
     if args.generate:
         file_name: str = args.output
         n: int = args.count
@@ -47,6 +48,7 @@ def main() -> None:
         return
 
     if args.input:
+        # Чтение из файла
         try:
             n, graph_mx = load_mx(args.input)
         except FileNotFoundError:
@@ -56,12 +58,16 @@ def main() -> None:
             print("Неверный формат файла.")
             return
     else:
+        # Чтение с stdin
         n: int = int(input())
         graph_mx: list[list[int]] = [[int(i) for i in input().split()] for _ in range(n)]
 
+    # Выбор метода решения
     if args.method == "exact":
+        # Точный метод
         tsp_dp(n, graph_mx)
     elif args.method == "approx":
+        # Приближённый алгоритм
         tsp_alsh2(n, graph_mx)
     else:
         print(
