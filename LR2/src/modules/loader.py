@@ -17,7 +17,7 @@ def generate_mx(n: int, symmetric: bool = False, max_weight: int = 100) -> list[
     mx: list[list[int]] = [[0] * n for _ in range(n)]
     for i in range(n):
         for j in range(i + 1, n):
-            w: int = randint(1, max_weight)
+            w: int = randint(0, max_weight)
             mx[i][j]: int = w
             mx[j][i]: int = w if symmetric else randint(1, max_weight)
     return mx
