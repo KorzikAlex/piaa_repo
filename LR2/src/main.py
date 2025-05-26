@@ -32,7 +32,7 @@ def main() -> None:
         if not 5 <= args.count <= 15:
             print("Значение аргумента должно быть в диапазоне [5, 15].")
             return
-        graph_mx: list[list[int]] = generate_mx(n, args.symmetric)
+        graph_mx: list[list[int]] = generate_mx(n, args.symmetric, args.max_weight)
         if args.output:
             file_name = args.output
         try:
