@@ -7,7 +7,7 @@
 INF: float = float("inf")  # Бесконечность для инициализации расстояний
 
 
-def prim_mst_cost(graph, nodes) -> int | float:
+def prim_mst_cost(graph: list[list[int]], nodes: list[int]) -> int | float:
     """
     Функция для вычисления стоимости минимального остовного дерева
     с использованием алгоритма Прима.
