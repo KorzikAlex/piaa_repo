@@ -9,8 +9,10 @@ class Vertex:
     Класс, представляющий вершину в автомате.
     """
 
-    def __init__(self, id_: int, alpha: int,
-                    parent: "Vertex" or None = None, pchar: str or None = None) -> None:
+    def __init__(
+            self, id_: int, alpha: int,
+            parent: "Vertex" or None = None, pchar: str or None = None
+    ) -> None:
         """
         Конструктор класса Vertex.
         :param id_: Идентификатор вершины.
@@ -105,11 +107,11 @@ class Vertex:
         return self.__pchar
 
     def __str__(self) -> str:
-        parent_id = self.parent.id if self.parent else "None"
-        sufflink_id = self.sufflink.id if self.sufflink else "None"
-        tlink_id = self.tlink.id if self.tlink else "None"
-        next_ids = [(i, v.id) for i, v in enumerate(self.next) if v is not None]
-        go_ids = [(i, v.id) for i, v in enumerate(self.go) if v is not None]
+        parent_id: int | str = self.parent.id if self.parent else "None"
+        sufflink_id: int | str = self.sufflink.id if self.sufflink else "None"
+        tlink_id: int | str = self.tlink.id if self.tlink else "None"
+        next_ids: list[tuple[int, int]] = [(i, v.id) for i, v in enumerate(self.next) if v is not None]
+        go_ids: list[tuple[int, int]] = [(i, v.id) for i, v in enumerate(self.go) if v is not None]
         return (f"Vertex(id={self.id}, pchar='{self.pchar}', parent={parent_id}, "
                 f"is_terminal={self.is_terminal}, pattern_numbers={self.pattern_numbers}, "
                 f"sufflink={sufflink_id}, tlink={tlink_id}, next={next_ids}, go={go_ids})")

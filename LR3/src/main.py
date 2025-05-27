@@ -11,7 +11,7 @@ from modules.vagner_fisher import calculate_edit_distance, compute_edit_sequence
 def main() -> None:
     """
     Главная функция
-    :return:
+    :return: None
     """
     print("Задание #1: Алгоритм Вагнера-Фишера")
     rep_cost, ins_cost, del_cost, ins2_cost = map(int, input().split())

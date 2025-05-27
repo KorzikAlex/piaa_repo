@@ -213,8 +213,10 @@ class Trie:
                 else:
                     label: str = (v.pchar if v.pchar is not None else '') + f" ({v.id})"
                 if v.is_terminal:
-                    automaton.node(str(v.id), label, shape="circle",
-                                    style="filled", fillcolor="lightblue")
+                    automaton.node(
+                        str(v.id), label, shape="circle",
+                        style="filled", fillcolor="lightblue"
+                    )
                 else:
                     automaton.node(str(v.id), label, shape="circle")
 
@@ -230,15 +232,19 @@ class Trie:
             v: Vertex
             for v in self.vertices:
                 if v.tlink is not None:
-                    automaton.edge(str(v.id), str(v.tlink.id), style="dotted",
-                                    color="blue", constraint="false")
+                    automaton.edge(
+                        str(v.id), str(v.tlink.id), style="dotted",
+                        color="blue", constraint="false"
+                    )
 
             # Добавление суффиксных ссылок
             v: Vertex
             for v in self.vertices:
                 if v.sufflink is not None and v.sufflink != v and v.sufflink != v.tlink:
-                    automaton.edge(str(v.id), str(v.sufflink.id), style="dashed",
-                                    color="red", constraint="false")
+                    automaton.edge(
+                        str(v.id), str(v.sufflink.id), style="dashed",
+                        color="red", constraint="false"
+                    )
 
         with dot.subgraph(name="cluster_legend") as legend:
             # Добавление легенды
@@ -281,8 +287,10 @@ class Trie:
                     transitions.append(f"'{char}': {next_v.id}")
             trans_str: str = ', '.join(transitions) if transitions else 'нет'
             term_info: str = f", терминальная (шаблоны: {v.pattern_numbers})" if v.is_terminal else ""
-            print(f"Вершина {v.id}: родитель {parent_id}, "
-                    f"символ '{pchar}'{term_info}, переходы: {trans_str}")
+            print(
+                f"Вершина {v.id}: родитель {parent_id}, "
+                f"символ '{pchar}'{term_info}, переходы: {trans_str}"
+            )
 
     def print_automaton_structure(self) -> None:
         """
@@ -301,5 +309,7 @@ class Trie:
                     char: str = _char(idx)
                     go_trans.append(f"'{char}': {go_v.id}")
             go_str: str = ', '.join(go_trans) if go_trans else 'нет'
-            print(f"Вершина {v.id}: суффиксная ссылка -> {suff_id}, "
-                    f"терминальная ссылка -> {tlink_id}, переходы: {go_str}")
+            print(
+                f"Вершина {v.id}: суффиксная ссылка -> {suff_id}, "
+                f"терминальная ссылка -> {tlink_id}, переходы: {go_str}"
+            )

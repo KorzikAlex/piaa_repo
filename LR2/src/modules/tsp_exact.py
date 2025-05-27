@@ -32,7 +32,7 @@ def tsp_dp(n: int, graph: list[list[int]]) -> None:
                 continue
             print(f"  Текущий город u={u}")
             for v in range(n):
-                if mask & (1 << v) or graph[u][v] == 0:
+                if mask & (1 << v):
                     print(f"  Город v={v} уже в маске")
                     continue
                 if graph[u][v] == 0:

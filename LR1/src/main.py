@@ -1,3 +1,4 @@
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 """
 Главный файл программы. Содержит функции для проверки времени выполнения алгоритма.
@@ -5,38 +6,44 @@
 Вар. 2и. Итеративный бэктрекинг. Исследование времени выполнения от
 размера квадрата.
 """
-import timeit
-
+from timeit import timeit
 
 from modules.board import Board
 from modules.backtracking import backtracking_algorithm, silent_backtracking
 
+
 def time_check() -> None:
     """
     Эта функция проверяет время выполнения алгоритма поиска с возвратом.
-    :return:
+    :return: None
     """
     n_sizes: list[int] = list(range(2, 21))
     result_time: float = 0.0
     n: int
     for n in n_sizes:
-        exec_time: float = timeit.timeit(lambda: silent_backtracking(n), number=1)
+        exec_time: float = timeit(lambda: silent_backtracking(n), number=1)
         result_time += exec_time
-        print(f"Время выполнения для доски размером {n}*{n}:\t{exec_time:.6f} сек.".replace(".", ",", 1))
+        print(
+            f"Время выполнения для доски размером {n}*{n}:"
+            f"\t{exec_time:.6f} сек.".replace(".", ",", 1)
+        )
     print(f"\nОбщее время выполнения: {result_time:.6f} сек.")
 
 
 def main() -> None:
     """
     Главная функция.
-    :return:
+    :return: None
     """
     # ввод размера доски
     while True:
         try:
             n: int = int(input())
             if not 2 <= n <= 60:
-                print("Ошибка: размер доски должен быть натуральным целым числом в диапазоне от [2, 20].")
+                print(
+                    "Ошибка: размер доски должен быть "
+                    "натуральным целым числом в диапазоне от [2, 20]."
+                )
                 continue
             break
         except ValueError:

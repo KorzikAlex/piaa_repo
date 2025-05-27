@@ -1,3 +1,4 @@
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 """
 Этот модуль содержит функции для алгоритма поиска с возвратом.
@@ -13,7 +14,7 @@ def is_prime(n: int) -> bool:
     """
     Эта функция проверяет, является ли число простым.
     :param n:
-    :return:
+    :return: True, если число простое, иначе False
     """
     if n < 2:
         return False
@@ -27,7 +28,7 @@ def get_divisors(n: int) -> tuple[int, int]:
     """
     Эта функция возвращает делители числа.
     :param n:
-    :return:
+    :return: Кортеж из двух делителей числа n
     """
     for i in range(2, int(n ** 0.5) + 1):
         if n % i == 0:
@@ -38,9 +39,9 @@ def get_divisors(n: int) -> tuple[int, int]:
 def scale_board(board: Board, mult: int) -> Board:
     """
     Эта функция масштабирует доску.
-    :param board:
-    :param mult:
-    :return:
+    :param board: Исходная доска, которую нужно масштабировать
+    :param mult: Множитель масштабирования
+    :return: Масштабированная доска
     """
     print(f"Масштабируем доску {board.size}x{board.size} в {mult} раз")
     new_board: Board = Board(board.size * mult)
@@ -53,8 +54,8 @@ def scale_board(board: Board, mult: int) -> Board:
 def backtracking_fill_board(board: Board) -> Board:
     """
     Эта функция возвращает доску с заполненными квадратами.
-    :param board:
-    :return:
+    :param board: Исходная доска, которую нужно заполнить
+    :return: Доска с заполненными квадратами или исходная доска, если заполнение невозможно
     """
     iter_queue: list[Board] = [board]
     count_steps: int = 0
@@ -83,8 +84,8 @@ def backtracking_fill_board(board: Board) -> Board:
 def backtracking_algorithm(board: Board) -> list[list[int]]:
     """
     Эта функция реализует алгоритм поиска с возвратом.
-    :param board:
-    :return:
+    :param board: Исходная доска, которую нужно заполнить.
+    :return: Список квадратов, которые были добавлены на доску.
     """
     if board.size % 2 == 0:
         print("Чётный размер - расставляем 4 квадрата")
@@ -113,8 +114,8 @@ def backtracking_algorithm(board: Board) -> list[list[int]]:
 def silent_backtracking(n: int) -> None:
     """
     Обертка для подавления вывода алгоритма.
-    :param n:
-    :return:
+    :param n: Размер доски
+    :return: None
     """
     original_stdout: sys = sys.stdout
     sys.stdout = io.StringIO()  # Перенаправляем вывод в буфер

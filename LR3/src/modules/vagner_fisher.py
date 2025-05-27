@@ -4,20 +4,22 @@
 """
 
 
-def _wagner_fisher_step(i: int, j: int, s1: str, s2: str, matrix: list[list[int]],
-                        rep_cost: int, ins_cost: int, del_cost: int, ins2_cost: int) -> int:
+def _wagner_fisher_step(
+        i: int, j: int, s1: str, s2: str, matrix: list[list[int]],
+        rep_cost: int, ins_cost: int, del_cost: int, ins2_cost: int
+) -> int:
     """
     Вычисляет шаг алгоритма Вагнера-Фишера для двух строк s1 и s2.
-    :param i:
-    :param j:
-    :param s1:
-    :param s2:
-    :param matrix:
-    :param rep_cost:
-    :param ins_cost:
-    :param del_cost:
-    :param ins2_cost:
-    :return:
+    :param i: Индекс строки s1
+    :param j: Индекс строки s2
+    :param s1: Первая строка
+    :param s2: Вторая строка
+    :param matrix: Матрица расстояний редактирования
+    :param rep_cost: Стоимость замены символа
+    :param ins_cost: Стоимость вставки символа
+    :param del_cost: Стоимость удаления символа
+    :param ins2_cost: Стоимость последовательной вставки двух одинаковых символов
+    :return: Значение для ячейки (i, j) матрицы расстояний редактирования
     """
     print(f"--- Вычисление ячейки ({i}, {j}) ---")
     if i == 0 and j == 0:
@@ -35,9 +37,11 @@ def _wagner_fisher_step(i: int, j: int, s1: str, s2: str, matrix: list[list[int]
         val1: int = matrix[0][j - 1] + ins_cost
         val2: int = matrix[0][j - 2] + ins2_cost
         val: int = min(val1, val2)
-        print(f"i=0, j={j}: варианты {val1} (одиночная вставка) "
-              f"и {val2} (двойная вставка). "
-              f"Минимум: {val}.")
+        print(
+            f"i=0, j={j}: варианты {val1} (одиночная вставка) "
+            f"и {val2} (двойная вставка). "
+            f"Минимум: {val}."
+        )
         return val
 
     # Замена или совпадение
@@ -52,34 +56,36 @@ def _wagner_fisher_step(i: int, j: int, s1: str, s2: str, matrix: list[list[int]
         candidates.append(ins2_val)
     else:
         print("Двойная вставка недоступна (j < 2)")
-    print(f"Кандидаты для ячейки ({i}, {j}): {candidates}. "
-          f"Минимальное значение: {min(candidates)}.")
+    print(
+        f"Кандидаты для ячейки ({i}, {j}): {candidates}. "
+        f"Минимальное значение: {min(candidates)}."
+    )
     return min(candidates)
 
 
-def calculate_edit_distance(s1: str, s2: str,
-                            rep_cost: int = 1, ins_cost: int = 1,
-                            del_cost: int = 1, ins2_cost: int = 1) -> int:
+def calculate_edit_distance(
+        s1: str, s2: str,
+        rep_cost: int = 1, ins_cost: int = 1,
+        del_cost: int = 1, ins2_cost: int = 1
+) -> int:
     """
     Вычисляет расстояние редактирования между строками s1 и s2
     с учётом операций: замены, вставки, удаления и
     последовательной вставки двух одинаковых символов.
-    :param s1:
-    :param s2:
-    :param rep_cost:
-    :param ins_cost:
-    :param del_cost:
-    :param ins2_cost:
-    :return:
+    :param s1: Первая строка
+    :param s2: Вторая строка
+    :param rep_cost: стоимость замены символа
+    :param ins_cost: стоимость вставки символа
+    :param del_cost: стоимость удаления символа
+    :param ins2_cost: стоимость последовательной вставки двух одинаковых символов
+    :return: Расстояние редактирования между строками s1 и s2
     """
     n, m = len(s1), len(s2)
     matrix: list[list[int]] = [[0] * (m + 1) for _ in range(n + 1)]
 
     for i in range(n + 1):
         for j in range(m + 1):
-            matrix[i][j] = _wagner_fisher_step(i, j, s1, s2, matrix,
-                                               rep_cost, ins_cost,
-                                               del_cost, ins2_cost)
+            matrix[i][j] = _wagner_fisher_step(i, j, s1, s2, matrix, rep_cost, ins_cost, del_cost, ins2_cost)
             print(f"Текущее значение матрицы[{i}][{j}] = {matrix[i][j]}")
         print(f"\nСостояние матрицы после строки i={i}:")
         for row in matrix[:i + 1]:
@@ -88,9 +94,11 @@ def calculate_edit_distance(s1: str, s2: str,
     return matrix[n][m]
 
 
-def compute_edit_sequence(s1: str, s2: str,
-                          rep_cost: int = 1, ins_cost: int = 1,
-                          del_cost: int = 1, ins2_cost: int = 1) -> str:
+def compute_edit_sequence(
+        s1: str, s2: str,
+        rep_cost: int = 1, ins_cost: int = 1,
+        del_cost: int = 1, ins2_cost: int = 1
+) -> str:
     """
     Вычисляет последовательность операций для преобразования строки s1 в s2
     с учётом дополнительных затрат при последовательной вставке двух символов.
@@ -101,13 +109,13 @@ def compute_edit_sequence(s1: str, s2: str,
         I – вставка одного символа
         D – удаление символа
         P – последовательная вставка двух одинаковых символов
-    :param s1:
-    :param s2:
-    :param rep_cost:
-    :param ins_cost:
-    :param del_cost:
-    :param ins2_cost:
-    :return:
+    :param s1: Первая строка
+    :param s2: Вторая строка
+    :param rep_cost: стоимость замены символа
+    :param ins_cost: стоимость вставки символа
+    :param del_cost: стоимость удаления символа
+    :param ins2_cost: стоимость последовательной вставки двух одинаковых символов
+    :return: Строка, представляющая последовательность операций
     """
     n, m = len(s1), len(s2)
 
@@ -119,8 +127,10 @@ def compute_edit_sequence(s1: str, s2: str,
     for i in range(1, n + 1):
         cost[i][0]: int = cost[i - 1][0] + del_cost
         back[i][0]: str = 'D'
-        print(f"\ti={i}, j=0 → УДАЛЕНИЕ (D). cost[{i}][0] = {cost[i][0]} "
-              f"(предыдущее {cost[i-1][0]} + {del_cost})")
+        print(
+            f"\ti={i}, j=0 → УДАЛЕНИЕ (D). cost[{i}][0] = {cost[i][0]} "
+            f"(предыдущее {cost[i - 1][0]} + {del_cost})"
+        )
 
     print("\n" + "=" * 50)
     print("Инициализация первой строки (операции вставки):")
@@ -133,10 +143,14 @@ def compute_edit_sequence(s1: str, s2: str,
         candidate_single: int = cost[0][j - 1] + ins_cost
         candidate_double: int = cost[0][j - 2] + ins2_cost
         print(f"\n  i=0, j={j}:")
-        print(f"\tВариант 1: одиночная вставка → {candidate_single} "
-              f"(cost[0][{j - 1}]={cost[0][j - 1]} + {ins_cost})")
-        print(f"\tВариант 2: двойная вставка → {candidate_double} "
-              f"(cost[0][{j - 2}]={cost[0][j - 2]} + {ins2_cost})")
+        print(
+            f"\tВариант 1: одиночная вставка → {candidate_single} "
+            f"(cost[0][{j - 1}]={cost[0][j - 1]} + {ins_cost})"
+        )
+        print(
+            f"\tВариант 2: двойная вставка → {candidate_double} "
+            f"(cost[0][{j - 2}]={cost[0][j - 2]} + {ins2_cost})"
+        )
         if candidate_double < candidate_single:
             cost[0][j]: int = candidate_double
             back[0][j]: str = 'P'
